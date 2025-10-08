@@ -481,7 +481,7 @@ export default function EnhancedResultsScreen() {
                     <div class="card-label">投資回収期間</div>
                 </div>
                 <div class="summary-card">
-                    <div class="card-value">${calculationResult.savingsPercentage.toFixed(1)}%</div>
+                    <div class="card-value">${Math.round(calculationResult.savingsPercentage)}%</div>
                     <div class="card-label">コスト削減率</div>
                 </div>
             </div>
@@ -545,14 +545,14 @@ export default function EnhancedResultsScreen() {
             `).join('')}
             
             <div class="cta-section">
-                <h3 class="cta-title">🎉 助成金活用で最大75%キャッシュバック！</h3>
+                <h3 class="cta-title">🚀 Larkで業務効率を劇的に改善</h3>
                 <p class="cta-text">
-                    Lark導入には各種助成金が活用できます。年間${formatCurrency(calculationResult.annualSavings)}の削減効果を
-                    さらにお得に実現できます。
+                    年間${formatCurrency(calculationResult.annualSavings)}の削減効果を今すぐ実現しませんか？
+                    専門スタッフが導入から運用まで全面サポートいたします。
                 </p>
                 <div class="action-buttons">
-                    <button class="action-button" onclick="window.open('tel:0120-xxx-xxx')">📞 無料相談を申し込む</button>
-                    <button class="action-button" onclick="window.open('mailto:info@lark.com')">📧 詳細資料を請求</button>
+                    <button class="action-button" onclick="window.open('https://www.customercloud.co/lark-ivygain')">🚀 Larkの無料インストールはこちら</button>
+                    <button class="action-button" onclick="window.open('https://ivygain-project.jp.larksuite.com/scheduler/1077edbc8cd5e47a')">💬 導入に関するご質問・無料相談</button>
                 </div>
             </div>
         </div>
@@ -607,8 +607,8 @@ export default function EnhancedResultsScreen() {
   const proposalText = `Lark導入シミュレーション結果
 従業員数: ${employeeCount}名
 年間削減額: ${formatCurrency(calculationResult.annualSavings)}
-削減率: ${calculationResult.savingsPercentage.toFixed(1)}%
-ROI: ${calculationResult.roi.toFixed(1)}%
+削減率: ${Math.round(calculationResult.savingsPercentage)}%
+ROI: ${Math.round(calculationResult.roi)}%
 投資回収期間: ${Math.round(calculationResult.paybackPeriod)}ヶ月`;
 
   return (
@@ -646,14 +646,14 @@ ROI: ${calculationResult.roi.toFixed(1)}%
               
               <View style={styles.metricCard}>
                 <Text style={[styles.metricValue, { color: Colors.success }]}>
-                  {calculationResult.savingsPercentage.toFixed(1)}%
+                  {Math.round(calculationResult.savingsPercentage)}%
                 </Text>
                 <Text style={styles.metricLabel}>削減率</Text>
               </View>
               
               <View style={styles.metricCard}>
                 <Text style={[styles.metricValue, { color: Colors.primary }]}>
-                  {calculationResult.roi.toFixed(1)}%
+                  {Math.round(calculationResult.roi)}%
                 </Text>
                 <Text style={styles.metricLabel}>ROI</Text>
               </View>

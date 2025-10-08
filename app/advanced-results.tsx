@@ -107,14 +107,14 @@ export default function AdvancedResultsScreen() {
             <View style={styles.summaryItem}>
               <Text style={styles.summaryLabel}>削減率</Text>
               <Text style={[styles.summaryValue, { color: Colors.success }]}>
-                {calculationResult.savingsPercentage.toFixed(1)}%
+                {Math.round(calculationResult.savingsPercentage)}%
               </Text>
             </View>
             
             <View style={styles.summaryItem}>
               <Text style={styles.summaryLabel}>ROI</Text>
               <Text style={[styles.summaryValue, { color: Colors.primary }]}>
-                {calculationResult.roi.toFixed(1)}%
+                {Math.round(calculationResult.roi)}%
               </Text>
             </View>
             

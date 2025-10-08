@@ -452,13 +452,7 @@ export function generateFormalProposal(
     .lark-bar {
       background: #495057;
     }
-    .subsidy-section {
-      background: #f8f9fa;
-      border: 1px solid #dee2e6;
-      padding: 25px;
-      border-radius: 8px;
-      margin: 25px 0;
-    }
+
     .approval-section {
       background: #fff;
       border: 2px solid #495057;
@@ -986,42 +980,9 @@ export function generateFormalProposal(
       </tr>
     </table>
 
-    <div class="subsidy-section">
-      <h2 style="margin-top: 0; background: none; color: #495057; padding: 0; border: none;">8. 活用可能な補助金・助成金</h2>
-      <table>
-        <tr>
-          <th>制度名</th>
-          <th>補助率・上限</th>
-          <th>申請期間</th>
-          <th>推定適用額</th>
-        </tr>
-        <tr>
-          <td><strong>IT導入補助金2024</strong></td>
-          <td>最大75%・450万円</td>
-          <td>通年募集</td>
-          <td class="cost-positive">¥${Math.min(larkAnnualCost * 0.75, 4500000).toLocaleString()}</td>
-        </tr>
-        <tr>
-          <td><strong>DX推進補助金</strong></td>
-          <td>最大50%・300万円</td>
-          <td>年4回募集</td>
-          <td class="cost-positive">¥${Math.min(larkAnnualCost * 0.5, 3000000).toLocaleString()}</td>
-        </tr>
-        <tr>
-          <td><strong>働き方改革推進支援助成金</strong></td>
-          <td>最大100万円</td>
-          <td>随時</td>
-          <td class="cost-positive">¥1,000,000</td>
-        </tr>
-      </table>
-      <p style="font-weight: 600; color: #495057;">
-        ※補助金活用により、実質的な初年度投資額は大幅に削減可能
-      </p>
-    </div>
+    <h2>8. 導入スケジュールと成功要因</h2>
 
-    <h2>9. 導入スケジュールと成功要因</h2>
-
-    <h3>9.1 段階的導入によるリスク最小化</h3>
+    <h3>8.1 段階的導入によるリスク最小化</h3>
     
     <table>
       <tr>
@@ -1056,7 +1017,7 @@ export function generateFormalProposal(
       </tr>
     </table>
 
-    <h3>9.2 成功を担保する重要成功要因（CSF）</h3>
+    <h3>8.2 成功を担保する重要成功要因（CSF）</h3>
     <table>
       <tr>
         <th>成功要因</th>

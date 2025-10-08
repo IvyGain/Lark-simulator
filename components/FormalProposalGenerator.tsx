@@ -102,7 +102,7 @@ ${improvements.map(improvement => `・${improvement}`).join('\n')}
 ■ コスト削減効果
 ・導入後年間コスト：${formatCurrency(result.larkAnnualCost)}
 ・年間コスト削減額：${formatCurrency(result.annualSavings)}
-・コスト削減率：${result.savingsPercentage.toFixed(1)}%
+・コスト削減率：${Math.round(result.savingsPercentage)}%
 
 ■ 業務効率化効果
 ・年間工数削減：${Math.round(result.laborHoursSaved).toLocaleString()}時間

@@ -65,12 +65,12 @@ ${selectedTools.map(tool => `・ツール: ${tool.toolId} - 月額: ${formatCurr
 【コスト削減効果】
 ・Lark年間コスト: ${formatCurrency(result.larkAnnualCost)}
 ・年間削減額: ${formatCurrency(result.annualSavings)}
-・削減率: ${result.savingsPercentage.toFixed(1)}%
+・削減率: ${Math.round(result.savingsPercentage)}%
 
 【業務効率化効果】
 ・年間工数削減: ${Math.round(result.laborHoursSaved)}時間
 ・人件費換算削減額: ${formatCurrency(result.laborCostSaved)}
-・ROI（投資収益率）: ${result.roi.toFixed(1)}%
+・ROI（投資収益率）: ${Math.round(result.roi)}%
 ・投資回収期間: ${Math.round(result.paybackPeriod)}ヶ月
 
 ■ ユースケース提案

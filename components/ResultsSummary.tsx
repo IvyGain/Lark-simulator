@@ -20,9 +20,9 @@ export function ResultsSummary({
 
   const metrics = [
     { label: '年間削減コスト', value: formatCurrency(annualSavings), highlight: true },
-    { label: '削減率', value: `${savingsPercentage}%` },
-    { label: 'ROI', value: `${roi}%` },
-    { label: '投資回収期間', value: `${paybackPeriod}ヶ月` },
+    { label: '削減率', value: `${Math.round(savingsPercentage)}%` },
+    { label: 'ROI', value: `${Math.round(roi)}%` },
+    { label: '投資回収期間', value: `${Math.round(paybackPeriod)}ヶ月` },
   ];
   return (
     <View style={styles.container}>

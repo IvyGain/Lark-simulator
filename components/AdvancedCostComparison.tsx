@@ -22,7 +22,7 @@ export const AdvancedCostComparison: React.FC<AdvancedCostComparisonProps> = ({
   };
 
   const formatPercentage = (percentage: number) => {
-    return `${percentage.toFixed(1)}%`;
+    return `${Math.round(percentage)}%`;
   };
 
   const formatNumber = (num: number) => {

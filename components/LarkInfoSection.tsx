@@ -50,12 +50,7 @@ export function LarkInfoSection() {
         ))}
       </View>
 
-      <View style={styles.highlightBox}>
-        <Text style={styles.highlightTitle}>即座導入で最大75%キャッシュバック！</Text>
-        <Text style={styles.highlightText}>
-          Lark導入には各種割引金額が適用できます。詳しい情報は担当ページでご確認ください。
-        </Text>
-      </View>
+
     </View>
   );
 }

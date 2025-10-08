@@ -16,8 +16,8 @@ import { CallToActionSection } from "@/components/CallToActionSection";
 import { CompanyInfoBox } from "@/components/CompanyInfoBox";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
-import { SubsidyPlanBox } from "@/components/SubsidyPlanBox";
 import { ResultsSummary } from "@/components/ResultsSummary";
+import { CTASection } from "@/components/CTASection";
 import { generateStoryProposal, generateFormalProposal, openDocumentInNewTab } from "@/utils/documentGenerator";
 import Colors from "@/constants/colors";
 import { getResponsiveDimensions, spacing } from "@/constants/responsive";
@@ -30,29 +30,20 @@ export default function UnifiedSimulatorScreen() {
     industry,
     employeeCount,
     headquarters,
-    prefecture,
-    city,
     selectedTools,
     currentChallenges,
     expectedImprovements,
     calculationResults,
     mode,
-    availableSubsidies,
-    subsidyPlan,
-    isLoadingSubsidies,
     setCompanyName,
     setIndustry,
     setEmployeeCount,
     setHeadquarters,
-    setPrefecture,
-    setCity,
     setMode,
     toggleTool,
     setChallenges,
     setImprovements,
     calculateResults,
-    searchSubsidies,
-    generateSubsidyPlan,
     reset,
   } = useUnifiedStore();
 
@@ -81,14 +72,6 @@ export default function UnifiedSimulatorScreen() {
   useEffect(() => {
     setShowResults(selectedTools.length > 0 && calculationResults !== null);
   }, [selectedTools.length, calculationResults]);
-
-  // 補助金検索と計算の実行
-  const handleSubsidySearch = async () => {
-    if (calculationResults && prefecture) {
-      await searchSubsidies();
-      generateSubsidyPlan();
-    }
-  };
 
   if (!isReady) {
     return (
@@ -247,16 +230,6 @@ export default function UnifiedSimulatorScreen() {
               savingsPercentage={calculationResults.savingsPercentage || 0}
             />
 
-            <SubsidyPlanBox
-              subsidyPlan={subsidyPlan}
-              isLoading={isLoadingSubsidies}
-              onSearchSubsidies={handleSubsidySearch}
-              prefecture={prefecture}
-              city={city}
-              onPrefectureChange={setPrefecture}
-              onCityChange={setCity}
-            />
-
             <EnhancedDocumentGenerator
               onGenerateStoryProposal={handleGenerateStoryProposal}
               onGenerateFormalProposal={handleGenerateFormalProposal}
@@ -266,9 +239,9 @@ export default function UnifiedSimulatorScreen() {
 
             <LarkInfoSection />
 
-            <CallToActionSection
-              onContactSales={() => console.log('Contact sales clicked')}
-              onNewSimulation={() => router.push('/')}
+            <CTASection
+              annualSavings={calculationResults.annualSavings}
+              employeeCount={employeeCount}
             />
           </>
         )}

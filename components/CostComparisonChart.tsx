@@ -88,7 +88,7 @@ export function CostComparisonChart({
           <Text style={styles.savingsSubtext}>月間 ¥{Math.round(savingsAmount/12).toLocaleString()}/月</Text>
         </View>
         <View style={styles.percentageBox}>
-          <Text style={styles.percentageValue}>{savingsPercentage}%</Text>
+          <Text style={styles.percentageValue}>{Math.round(savingsPercentage)}%</Text>
           <Text style={styles.percentageLabel}>削減</Text>
         </View>
       </View>
