@@ -29,455 +29,214 @@ export const categoryTranslations: Record<string, string> = {
 export const tools: Tool[] = [
   // Communication
   {
-    id: "slack",
-    name: "Slack",
-    category: "Communication",
+    id: 'slack',
+    name: 'Slack',
+    category: 'communication',
     pricingPlans: [
-      { name: "Free", pricePerUser: 0, description: "90日間のメッセージ履歴、1対1通話" },
-      { name: "Pro", pricePerUser: 1310, description: "無制限メッセージ履歴、グループ通話" }, // $8.75 * 150 JPY
-      { name: "Business+", pricePerUser: 2700, description: "SAML SSO、99.99%稼働保証" }, // $18 * 150 JPY
+      { name: 'Free', pricePerUser: 0, description: '90日間のメッセージ履歴、1対1通話' },
+      { name: 'Pro', pricePerUser: 1050, description: '無制限メッセージ履歴、グループ通話' },
+      { name: 'Business+', pricePerUser: 1800, description: 'SAML SSO、99.99%稼働保証' },
+      { name: 'Enterprise Grid', pricePerUser: 2500, description: 'エンタープライズ機能、無制限ワークスペース' }
     ],
-    icon: "slack",
-    defaultPlanIndex: 1,
+    icon: '💬',
+    defaultPlanIndex: 1
   },
   {
-    id: "microsoft_teams",
-    name: "Microsoft Teams",
-    category: "Communication",
+    id: 'teams',
+    name: 'Microsoft Teams',
+    category: 'communication',
     pricingPlans: [
-      { name: "Free", pricePerUser: 0, description: "60分制限、100人まで" },
-      { name: "Microsoft 365 Business Basic", pricePerUser: 1260, description: "Teams + メール + 1TB" }, // $8.40 * 150 JPY
-      { name: "Microsoft 365 Business Standard", pricePerUser: 2520, description: "Teams + Office アプリ + 1TB" }, // $16.80 * 150 JPY
-      { name: "Teams Enterprise", pricePerUser: 788, description: "Teams単体ライセンス" }, // $5.25 * 150 JPY
+      { name: 'Free', pricePerUser: 0, description: '60分グループ通話、100人まで' },
+      { name: 'Microsoft 365 Business Basic', pricePerUser: 750, description: '300人会議、録画機能' },
+      { name: 'Microsoft 365 Business Standard', pricePerUser: 1500, description: 'Office アプリ、高度な機能' },
+      { name: 'Microsoft 365 Business Premium', pricePerUser: 2650, description: '高度なセキュリティ、デバイス管理' }
     ],
-    icon: "windows",
-    defaultPlanIndex: 1,
+    icon: '🎯',
+    defaultPlanIndex: 1
   },
-  {
-    id: "chatwork",
-    name: "Chatwork",
-    category: "Communication",
-    pricingPlans: [
-      { name: "フリー", pricePerUser: 0, description: "累計14グループチャット" },
-      { name: "ビジネス", pricePerUser: 600, description: "無制限グループチャット、ユーザー管理" },
-      { name: "エンタープライズ", pricePerUser: 960, description: "外部SNS制限、IP制限" },
-    ],
-    icon: "comments",
-    defaultPlanIndex: 1,
-  },
-  {
-    id: "line_works",
-    name: "LINE WORKS",
-    category: "Communication",
-    pricingPlans: [
-      { name: "フリー", pricePerUser: 0, description: "100人まで、1GB" },
-      { name: "ライト", pricePerUser: 360, description: "無制限ユーザー、100GB" },
-      { name: "ベーシック", pricePerUser: 540, description: "ライト + 管理機能、1TB" },
-      { name: "プレミアム", pricePerUser: 960, description: "ベーシック + 高度セキュリティ" },
-    ],
-    icon: "comment",
-    defaultPlanIndex: 2,
-  },
-  {
-    id: "discord",
-    name: "Discord",
-    category: "Communication",
-    pricingPlans: [
-      { name: "Free", pricePerUser: 0, description: "基本機能" },
-      { name: "Nitro", pricePerUser: 1500, description: "高品質画面共有、大容量ファイル" },
-    ],
-    icon: "headphones",
-    defaultPlanIndex: 0,
-  },
-  
+
   // Video Conferencing
   {
-    id: "zoom",
-    name: "Zoom",
-    category: "Video Conferencing",
+    id: 'zoom',
+    name: 'Zoom',
+    category: 'video_conferencing',
     pricingPlans: [
-      { name: "Basic", pricePerUser: 0, description: "40分制限、100人まで" },
-      { name: "Pro", pricePerUser: 2000, description: "30時間、100人、クラウド録画" }, // $13.33 * 150 JPY
-      { name: "Business", pricePerUser: 2750, description: "300人、管理機能" }, // $18.32 * 150 JPY
+      { name: 'Basic', pricePerUser: 0, description: '40分制限、100人まで' },
+      { name: 'Pro', pricePerUser: 2549, description: '30時間会議、クラウド録画10GB' },
+      { name: 'Business', pricePerUser: 3299, description: '300人会議、管理機能' },
+      { name: 'Enterprise', pricePerUser: 2549, description: '500人会議、無制限クラウドストレージ' }
     ],
-    icon: "video-camera",
-    defaultPlanIndex: 1,
+    icon: '📹',
+    defaultPlanIndex: 1
   },
   {
-    id: "google_meet",
-    name: "Google Meet",
-    category: "Video Conferencing",
+    id: 'google-meet',
+    name: 'Google Meet',
+    category: 'video_conferencing',
     pricingPlans: [
-      { name: "Free", pricePerUser: 0, description: "60分制限、100人まで" },
-      { name: "Business Starter", pricePerUser: 1200, description: "Meet + Gmail + 30GB" }, // $8 * 150 JPY
-      { name: "Business Standard", pricePerUser: 2400, description: "Meet + Office + 2TB" }, // $16 * 150 JPY
+      { name: 'Free', pricePerUser: 0, description: '60分制限、100人まで' },
+      { name: 'Google Workspace Starter', pricePerUser: 800, description: '100人会議、30GBストレージ' },
+      { name: 'Google Workspace Standard', pricePerUser: 1600, description: '150人会議、録画機能、2TB' },
+      { name: 'Google Workspace Plus', pricePerUser: 2500, description: '500人会議、5TBストレージ' }
     ],
-    icon: "video-camera",
-    defaultPlanIndex: 1,
+    icon: '🎥',
+    defaultPlanIndex: 1
   },
-  
+
   // Productivity
   {
-    id: "google_workspace",
-    name: "Google Workspace",
-    category: "Productivity",
+    id: 'office365',
+    name: 'Microsoft 365',
+    category: 'productivity',
     pricingPlans: [
-      { name: "Business Starter", pricePerUser: 1200, description: "Gmail + Meet + 30GB" }, // ¥800 from research
-      { name: "Business Standard", pricePerUser: 2400, description: "Office アプリ + 2TB" }, // ¥1,600 from research
-      { name: "Business Plus", pricePerUser: 3750, description: "高度セキュリティ + 5TB" }, // ¥2,500 from research
+      { name: 'Microsoft 365 Business Basic', pricePerUser: 750, description: 'Web版Office、1TBストレージ' },
+      { name: 'Microsoft 365 Business Standard', pricePerUser: 1500, description: 'デスクトップOffice、Teams' },
+      { name: 'Microsoft 365 Business Premium', pricePerUser: 2650, description: '高度なセキュリティ、デバイス管理' },
+      { name: 'Microsoft 365 E3', pricePerUser: 4050, description: 'エンタープライズ機能、コンプライアンス' }
     ],
-    icon: "google",
-    defaultPlanIndex: 1,
+    icon: '📊',
+    defaultPlanIndex: 1
   },
   {
-    id: "office365",
-    name: "Microsoft 365",
-    category: "Productivity",
+    id: 'google-workspace',
+    name: 'Google Workspace',
+    category: 'productivity',
     pricingPlans: [
-      { name: "Business Basic", pricePerUser: 1260, description: "Web版Office + 1TB" },
-      { name: "Business Standard", pricePerUser: 2520, description: "デスクトップOffice + Teams" },
-      { name: "Business Premium", pricePerUser: 3360, description: "高度セキュリティ + デバイス管理" },
+      { name: 'Business Starter', pricePerUser: 800, description: '30GBストレージ、Gmail、Meet' },
+      { name: 'Business Standard', pricePerUser: 1600, description: '2TBストレージ、録画機能' },
+      { name: 'Business Plus', pricePerUser: 2500, description: '5TBストレージ、高度なセキュリティ' },
+      { name: 'Enterprise Plus', pricePerUser: 3980, description: '無制限ストレージ、DLP、監査' }
     ],
-    icon: "file-word-o",
-    defaultPlanIndex: 1,
+    icon: '🌐',
+    defaultPlanIndex: 1
   },
-  {
-    id: "zoho_workplace",
-    name: "Zoho Workplace",
-    category: "Productivity",
-    pricingPlans: [
-      { name: "Standard", pricePerUser: 450, description: "メール + Office + 30GB" },
-      { name: "Professional", pricePerUser: 750, description: "Standard + 100GB + 高度機能" },
-      { name: "Enterprise", pricePerUser: 1200, description: "Professional + 1TB + 管理機能" },
-    ],
-    icon: "briefcase",
-    defaultPlanIndex: 1,
-  },
-  {
-    id: "libreoffice",
-    name: "LibreOffice",
-    category: "Productivity",
-    pricingPlans: [
-      { name: "Free", pricePerUser: 0, description: "オープンソースOfficeスイート" },
-    ],
-    icon: "file-text-o",
-    defaultPlanIndex: 0,
-  },
-  {
-    id: "wps_office",
-    name: "WPS Office",
-    category: "Productivity",
-    pricingPlans: [
-      { name: "Free", pricePerUser: 0, description: "基本機能、広告あり" },
-      { name: "Premium", pricePerUser: 450, description: "広告なし、PDF編集、1GB" },
-    ],
-    icon: "file-o",
-    defaultPlanIndex: 1,
-  },
-  
+
   // Storage
   {
-    id: "dropbox",
-    name: "Dropbox",
-    category: "Storage",
+    id: 'dropbox',
+    name: 'Dropbox',
+    category: 'storage',
     pricingPlans: [
-      { name: "Basic", pricePerUser: 0, description: "2GB" },
-      { name: "Plus", pricePerUser: 1500, description: "2TB + 高度共有" },
-      { name: "Professional", pricePerUser: 3000, description: "3TB + 高度機能" },
-      { name: "Business Standard", pricePerUser: 1800, description: "5TB + チーム機能" },
+      { name: 'Basic', pricePerUser: 0, description: '2GBストレージ' },
+      { name: 'Plus', pricePerUser: 1200, description: '2TBストレージ、高度な共有' },
+      { name: 'Family', pricePerUser: 2000, description: '2TB、6ユーザーまで' },
+      { name: 'Professional', pricePerUser: 2400, description: '3TB、高度な機能' }
     ],
-    icon: "dropbox",
-    defaultPlanIndex: 3,
+    icon: '📦',
+    defaultPlanIndex: 1
   },
   {
-    id: "onedrive",
-    name: "OneDrive",
-    category: "Storage",
+    id: 'onedrive',
+    name: 'OneDrive',
+    category: 'storage',
     pricingPlans: [
-      { name: "Basic", pricePerUser: 0, description: "5GB" },
-      { name: "Microsoft 365 Personal", pricePerUser: 1050, description: "1TB + Office" },
-      { name: "Microsoft 365 Business Basic", pricePerUser: 1260, description: "1TB + Teams" },
+      { name: 'Basic', pricePerUser: 0, description: '5GBストレージ' },
+      { name: 'Microsoft 365 Personal', pricePerUser: 1050, description: '1TBストレージ、Office' },
+      { name: 'Microsoft 365 Family', pricePerUser: 1500, description: '6TB（6ユーザー）、Office' },
+      { name: 'OneDrive Standalone 100GB', pricePerUser: 250, description: '100GBストレージのみ' }
     ],
-    icon: "cloud",
-    defaultPlanIndex: 2,
+    icon: '☁️',
+    defaultPlanIndex: 1
   },
-  {
-    id: "box",
-    name: "Box",
-    category: "Storage",
-    pricingPlans: [
-      { name: "Individual", pricePerUser: 0, description: "10GB" },
-      { name: "Personal Pro", pricePerUser: 1500, description: "100GB" },
-      { name: "Business Starter", pricePerUser: 750, description: "100GB + コラボ機能" },
-      { name: "Business", pricePerUser: 2250, description: "無制限 + 高度機能" },
-    ],
-    icon: "archive",
-    defaultPlanIndex: 3,
-  },
-  {
-    id: "google_drive",
-    name: "Google Drive",
-    category: "Storage",
-    pricingPlans: [
-      { name: "Free", pricePerUser: 0, description: "15GB" },
-      { name: "Google One 100GB", pricePerUser: 250, description: "100GB" },
-      { name: "Google One 2TB", pricePerUser: 1300, description: "2TB + 家族共有" },
-      { name: "Workspace Business", pricePerUser: 1200, description: "30GB + ビジネス機能" },
-    ],
-    icon: "hdd-o",
-    defaultPlanIndex: 3,
-  },
-  
+
   // Project Management
   {
-    id: "asana",
-    name: "Asana",
-    category: "Project Management",
+    id: 'asana',
+    name: 'Asana',
+    category: 'project_management',
     pricingPlans: [
-      { name: "Basic", pricePerUser: 0, description: "15人まで、基本機能" },
-      { name: "Premium", pricePerUser: 1650, description: "タイムライン、カスタムフィールド" },
-      { name: "Business", pricePerUser: 3750, description: "ポートフォリオ、高度検索" },
+      { name: 'Basic', pricePerUser: 0, description: '15人まで、基本機能' },
+      { name: 'Premium', pricePerUser: 1350, description: 'タイムライン、カスタムフィールド' },
+      { name: 'Business', pricePerUser: 2700, description: 'ポートフォリオ、高度なレポート' },
+      { name: 'Enterprise', pricePerUser: 3000, description: 'SAML、高度なセキュリティ' }
     ],
-    icon: "tasks",
-    defaultPlanIndex: 1,
+    icon: '📋',
+    defaultPlanIndex: 1
   },
   {
-    id: "trello",
-    name: "Trello",
-    category: "Project Management",
+    id: 'trello',
+    name: 'Trello',
+    category: 'project_management',
     pricingPlans: [
-      { name: "Free", pricePerUser: 0, description: "10チームボード" },
-      { name: "Standard", pricePerUser: 750, description: "無制限ボード、カレンダー" },
-      { name: "Premium", pricePerUser: 1500, description: "タイムライン、ダッシュボード" },
-      { name: "Enterprise", pricePerUser: 2550, description: "高度セキュリティ、管理機能" },
+      { name: 'Free', pricePerUser: 0, description: '10チームボード、基本機能' },
+      { name: 'Standard', pricePerUser: 600, description: '無制限ボード、カレンダー' },
+      { name: 'Premium', pricePerUser: 1200, description: 'タイムライン、高度な機能' },
+      { name: 'Enterprise', pricePerUser: 2100, description: 'セキュリティ、管理機能' }
     ],
-    icon: "trello",
-    defaultPlanIndex: 1,
+    icon: '📌',
+    defaultPlanIndex: 1
   },
-  {
-    id: "jira",
-    name: "Jira",
-    category: "Project Management",
-    pricingPlans: [
-      { name: "Free", pricePerUser: 0, description: "10ユーザーまで" },
-      { name: "Standard", pricePerUser: 1050, description: "ロードマップ、レポート" },
-      { name: "Premium", pricePerUser: 3000, description: "高度計画、無制限ストレージ" },
-    ],
-    icon: "bug",
-    defaultPlanIndex: 1,
-  },
-  
+
   // Knowledge Management
   {
-    id: "notion",
-    name: "Notion",
-    category: "Knowledge Management",
+    id: 'notion',
+    name: 'Notion',
+    category: 'knowledge_management',
     pricingPlans: [
-      { name: "Free", pricePerUser: 0, description: "個人利用、1000ブロック" },
-      { name: "Plus", pricePerUser: 1200, description: "無制限ブロック、ゲスト" },
-      { name: "Business", pricePerUser: 2250, description: "高度権限、SAML SSO" },
+      { name: 'Free', pricePerUser: 0, description: '個人利用、基本機能' },
+      { name: 'Plus', pricePerUser: 1000, description: '無制限ブロック、ゲスト' },
+      { name: 'Business', pricePerUser: 1800, description: 'SAML SSO、高度な権限' },
+      { name: 'Enterprise', pricePerUser: 2400, description: '監査ログ、高度なセキュリティ' }
     ],
-    icon: "file-text-o",
-    defaultPlanIndex: 1,
+    icon: '📝',
+    defaultPlanIndex: 1
   },
   {
-    id: "confluence",
-    name: "Confluence",
-    category: "Knowledge Management",
+    id: 'confluence',
+    name: 'Confluence',
+    category: 'knowledge_management',
     pricingPlans: [
-      { name: "Free", pricePerUser: 0, description: "10ユーザーまで" },
-      { name: "Standard", pricePerUser: 900, description: "無制限ユーザー、2GB" },
-      { name: "Premium", pricePerUser: 2700, description: "無制限ストレージ、高度機能" },
+      { name: 'Free', pricePerUser: 0, description: '10ユーザーまで、2GBストレージ' },
+      { name: 'Standard', pricePerUser: 650, description: '無制限ストレージ、アプリ' },
+      { name: 'Premium', pricePerUser: 1250, description: '高度な権限、分析' },
+      { name: 'Enterprise', pricePerUser: 2400, description: '無制限サイト、エンタープライズ機能' }
     ],
-    icon: "book",
-    defaultPlanIndex: 1,
+    icon: '📚',
+    defaultPlanIndex: 1
   },
-  {
-    id: "evernote",
-    name: "Evernote",
-    category: "Knowledge Management",
-    pricingPlans: [
-      { name: "Free", pricePerUser: 0, description: "60MB/月、2デバイス" },
-      { name: "Personal", pricePerUser: 1050, description: "10GB/月、無制限デバイス" },
-      { name: "Professional", pricePerUser: 1650, description: "20GB/月、高度機能" },
-    ],
-    icon: "sticky-note",
-    defaultPlanIndex: 1,
-  },
-  {
-    id: "onenote",
-    name: "OneNote",
-    category: "Knowledge Management",
-    pricingPlans: [
-      { name: "Free", pricePerUser: 0, description: "5GB OneDrive" },
-      { name: "Microsoft 365", pricePerUser: 1260, description: "1TB + Office アプリ" },
-    ],
-    icon: "file-text",
-    defaultPlanIndex: 0,
-  },
-  {
-    id: "obsidian",
-    name: "Obsidian",
-    category: "Knowledge Management",
-    pricingPlans: [
-      { name: "Personal", pricePerUser: 0, description: "個人利用無料" },
-      { name: "Commercial", pricePerUser: 7500, description: "商用利用ライセンス" },
-      { name: "Catalyst", pricePerUser: 3750, description: "早期アクセス + サポート" },
-    ],
-    icon: "diamond",
-    defaultPlanIndex: 0,
-  },
-  {
-    id: "planner",
-    name: "Microsoft Planner",
-    category: "Knowledge Management",
-    pricingPlans: [
-      { name: "Microsoft 365 Basic", pricePerUser: 1260, description: "Planner + Teams + メール" },
-      { name: "Microsoft 365 Standard", pricePerUser: 2520, description: "Planner + Office アプリ" },
-    ],
-    icon: "calendar-check-o",
-    defaultPlanIndex: 0,
-  },
-  {
-    id: "airtable",
-    name: "Airtable",
-    category: "Knowledge Management",
-    pricingPlans: [
-      { name: "Free", pricePerUser: 0, description: "1200レコード/ベース" },
-      { name: "Plus", pricePerUser: 1500, description: "5000レコード、カレンダー" },
-      { name: "Pro", pricePerUser: 3000, description: "50000レコード、高度機能" },
-    ],
-    icon: "table",
-    defaultPlanIndex: 1,
-  },
-  {
-    id: "kintone",
-    name: "kintone",
-    category: "Knowledge Management",
-    pricingPlans: [
-      { name: "ライト", pricePerUser: 1170, description: "5アプリ、1GB" },
-      { name: "スタンダード", pricePerUser: 2340, description: "1000アプリ、5GB" },
-    ],
-    icon: "database",
-    defaultPlanIndex: 1,
-  },
-  {
-    id: "tldv",
-    name: "tl;dv",
-    category: "Knowledge Management",
-    pricingPlans: [
-      { name: "Free", pricePerUser: 0, description: "20録画/月" },
-      { name: "Pro", pricePerUser: 1200, description: "無制限録画、AI要約" },
-      { name: "Business", pricePerUser: 2400, description: "チーム機能、CRM連携" },
-    ],
-    icon: "video-camera",
-    defaultPlanIndex: 1,
-  },
-  
+
   // CRM
   {
-    id: "hubspot",
-    name: "HubSpot",
-    category: "CRM",
+    id: 'salesforce',
+    name: 'Salesforce',
+    category: 'crm',
     pricingPlans: [
-      { name: "Free", pricePerUser: 0, description: "基本CRM、1000連絡先" },
-      { name: "Starter", pricePerUser: 2700, description: "メール、フォーム、レポート" },
-      { name: "Professional", pricePerUser: 12000, description: "自動化、高度レポート" },
+      { name: 'Essentials', pricePerUser: 3000, description: '基本CRM、10ユーザーまで' },
+      { name: 'Professional', pricePerUser: 9000, description: '完全CRM、レポート' },
+      { name: 'Enterprise', pricePerUser: 18000, description: 'カスタマイズ、API' },
+      { name: 'Unlimited', pricePerUser: 36000, description: '無制限カスタマイズ、サポート' }
     ],
-    icon: "line-chart",
-    defaultPlanIndex: 1,
+    icon: '🤝',
+    defaultPlanIndex: 1
   },
   {
-    id: "salesforce",
-    name: "Salesforce",
-    category: "CRM",
+    id: 'hubspot',
+    name: 'HubSpot',
+    category: 'crm',
     pricingPlans: [
-      { name: "Essentials", pricePerUser: 3750, description: "小規模チーム向け" },
-      { name: "Professional", pricePerUser: 11250, description: "完全CRM機能" },
-      { name: "Enterprise", pricePerUser: 22500, description: "高度カスタマイズ" },
+      { name: 'Free', pricePerUser: 0, description: '基本CRM、1,000,000コンタクト' },
+      { name: 'Starter', pricePerUser: 2250, description: 'メール、シンプル自動化' },
+      { name: 'Professional', pricePerUser: 9000, description: '高度な自動化、レポート' },
+      { name: 'Enterprise', pricePerUser: 14400, description: 'カスタムオブジェクト、高度な機能' }
     ],
-    icon: "cloud",
-    defaultPlanIndex: 1,
+    icon: '🎯',
+    defaultPlanIndex: 1
   },
-  {
-    id: "zoho_crm",
-    name: "Zoho CRM",
-    category: "CRM",
-    pricingPlans: [
-      { name: "Standard", pricePerUser: 1800, description: "基本CRM機能" },
-      { name: "Professional", pricePerUser: 2850, description: "自動化、レポート" },
-      { name: "Enterprise", pricePerUser: 6000, description: "高度機能、カスタマイズ" },
-    ],
-    icon: "users",
-    defaultPlanIndex: 1,
-  },
-  
+
   // Scheduling
   {
-    id: "timelex",
-    name: "Timelex",
-    category: "Scheduling",
+    id: 'calendly',
+    name: 'Calendly',
+    category: 'scheduling',
     pricingPlans: [
-      { name: "ベーシック", pricePerUser: 600, description: "基本スケジュール調整" },
-      { name: "プロ", pricePerUser: 1200, description: "高度機能、カスタマイズ" },
+      { name: 'Basic', pricePerUser: 0, description: '1イベントタイプ、基本機能' },
+      { name: 'Essentials', pricePerUser: 1000, description: '無制限イベント、通知' },
+      { name: 'Professional', pricePerUser: 1500, description: 'Zoom統合、リマインダー' },
+      { name: 'Teams', pricePerUser: 2000, description: 'チーム機能、高度な統合' }
     ],
-    icon: "calendar",
-    defaultPlanIndex: 0,
-  },
-  {
-    id: "chouseisan",
-    name: "調整さん",
-    category: "Scheduling",
-    pricingPlans: [
-      { name: "無料", pricePerUser: 0, description: "基本的な日程調整" },
-    ],
-    icon: "calendar-check-o",
-    defaultPlanIndex: 0,
-  },
-  {
-    id: "calendly",
-    name: "Calendly",
-    category: "Scheduling",
-    pricingPlans: [
-      { name: "Free", pricePerUser: 0, description: "1イベントタイプ" },
-      { name: "Essentials", pricePerUser: 1200, description: "無制限イベント" },
-      { name: "Professional", pricePerUser: 1800, description: "チーム機能、分析" },
-    ],
-    icon: "calendar-plus-o",
-    defaultPlanIndex: 1,
-  },
-  {
-    id: "spacemarket",
-    name: "スペースマーケット",
-    category: "Scheduling",
-    pricingPlans: [
-      { name: "利用料", pricePerUser: 0, description: "予約時手数料のみ" },
-    ],
-    icon: "building",
-    defaultPlanIndex: 0,
-  },
-  {
-    id: "googlecalendar",
-    name: "Google Calendar",
-    category: "Scheduling",
-    pricingPlans: [
-      { name: "Free", pricePerUser: 0, description: "個人利用" },
-      { name: "Google Workspace", pricePerUser: 1200, description: "ビジネス機能" },
-    ],
-    icon: "calendar",
-    defaultPlanIndex: 0,
-  },
-  {
-    id: "outlook_calendar",
-    name: "Outlook Calendar",
-    category: "Scheduling",
-    pricingPlans: [
-      { name: "Free", pricePerUser: 0, description: "個人利用" },
-      { name: "Microsoft 365", pricePerUser: 1260, description: "ビジネス機能" },
-    ],
-    icon: "calendar-o",
-    defaultPlanIndex: 0,
-  },
+    icon: '📅',
+    defaultPlanIndex: 1
+  }
 ];
 
 // Group tools by category

@@ -17,7 +17,7 @@ import { CompanyInfoBox } from "@/components/CompanyInfoBox";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ResultsSummary } from "@/components/ResultsSummary";
-import { CTASection } from "@/components/CTASection";
+
 import { generateStoryProposal, generateFormalProposal, openDocumentInNewTab } from "@/utils/documentGenerator";
 import Colors from "@/constants/colors";
 import { getResponsiveDimensions, spacing } from "@/constants/responsive";
@@ -238,11 +238,6 @@ export default function UnifiedSimulatorScreen() {
             />
 
             <LarkInfoSection />
-
-            <CTASection
-              annualSavings={calculationResults.annualSavings}
-              employeeCount={employeeCount}
-            />
           </>
         )}
         

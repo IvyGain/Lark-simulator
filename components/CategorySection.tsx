@@ -1,86 +1,65 @@
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import ToolCheckboxWithPlans from "./ToolCheckboxWithPlans";
-import { Tool } from "@/constants/tools";
-import Colors from "@/constants/colors";
+import React from 'react'
+import { View, Text, StyleSheet } from 'react-native'
+import { ToolCheckboxWithPlans } from './ToolCheckboxWithPlans'
+import { Tool } from '@/constants/tools'
+import Colors from '@/constants/colors'
 
-interface SelectedToolPlan {
-  toolId: string;
-  planIndex: number;
+export interface SelectedToolPlan {
+  toolId: string
+  planIndex: number
+  planName: string
 }
 
 interface CategorySectionProps {
-  category: string;
-  tools: Tool[];
-  selectedTools: SelectedToolPlan[];
-  onToggleTool: (id: string, planIndex?: number) => void;
-  onPlanChange?: (toolId: string, planIndex: number) => void;
+  title: string
+  tools: Tool[]
+  selectedTools: SelectedToolPlan[]
+  onToggleTool: (toolId: string) => void
+  onPlanChange: (toolId: string, planIndex: number) => void
 }
 
-export default function CategorySection({
-  category,
-  tools,
-  selectedTools,
-  onToggleTool,
-  onPlanChange,
+export function CategorySection({ 
+  title, 
+  tools, 
+  selectedTools, 
+  onToggleTool, 
+  onPlanChange 
 }: CategorySectionProps) {
-  const getSelectedPlanIndex = (toolId: string): number | undefined => {
-    const selectedTool = selectedTools.find(st => st.toolId === toolId);
-    return selectedTool?.planIndex;
-  };
-
-  const isToolSelected = (toolId: string): boolean => {
-    return selectedTools.some(st => st.toolId === toolId);
-  };
-
   return (
     <View style={styles.container}>
-      <Text style={styles.categoryTitle}>{category}</Text>
+      <Text style={styles.title}>{title}</Text>
       <View style={styles.toolsGrid}>
-        {tools.map((tool) => (
-          <View key={tool.id} style={styles.toolWrapper}>
+        {tools.map((tool) => {
+          const selectedTool = selectedTools.find(st => st.toolId === tool.id)
+          return (
             <ToolCheckboxWithPlans
+              key={tool.id}
               tool={tool}
-              isSelected={isToolSelected(tool.id)}
-              selectedPlanIndex={getSelectedPlanIndex(tool.id)}
-              onToggle={onToggleTool}
-              onPlanChange={onPlanChange}
+              isSelected={!!selectedTool}
+              selectedPlanIndex={selectedTool?.planIndex || 0}
+              onToggle={() => onToggleTool(tool.id)}
+              onPlanChange={(planIndex) => onPlanChange(tool.id, planIndex)}
             />
-          </View>
-        ))}
+          )
+        })}
       </View>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 12,
-    backgroundColor: Colors.white,
-    borderRadius: 10,
-    padding: 12,
-    shadowColor: Colors.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
+    marginBottom: 32,
   },
-  categoryTitle: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: Colors.primary,
-    marginBottom: 8,
-    paddingBottom: 6,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.gray[200],
+  title: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: Colors.text,
+    marginBottom: 16,
   },
   toolsGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
   },
-  toolWrapper: {
-    flexBasis: '32%', // 3 columns
-    marginBottom: 6,
-  }
-});
+})

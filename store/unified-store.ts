@@ -4,12 +4,20 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import { LARK_PRICE_PER_USER, tools } from "@/constants/tools";
 import { ErrorHandler, safeParseFloat, safeDivision } from "@/utils/errorHandler";
 
+// 選択されたツールとプラン情報
+export interface SelectedToolPlan {
+  toolId: string;
+  planIndex: number;
+}
+
 // 統合されたツール情報
 export interface UnifiedTool {
   id: string;
   name: string;
   category: string;
   pricePerUser: number;
+  planIndex: number; // 選択されたプランのインデックス
+  planName: string; // 選択されたプランの名前
   customMonthlyFee?: number;
   customAnnualFee?: number;
   isAnnualBilling?: boolean;
@@ -51,7 +59,7 @@ export interface UnifiedSimulatorState {
   headquarters: string; // 本社所在地
   prefecture: string; // 都道府県
   city: string; // 市区町村
-  selectedTools: UnifiedTool[];
+  selectedTools: SelectedToolPlan[]; // 変更: プラン情報を含む
   
   // 詳細情報（Advanced mode用）
   currentChallenges: string[];
@@ -89,8 +97,9 @@ export interface UnifiedSimulatorState {
   setCity: (city: string) => void;
   setMode: (mode: 'simple' | 'advanced' | 'enhanced' | 'unified') => void;
   
-  // ツール管理
-  toggleTool: (toolId: string) => void;
+  // ツール管理 - 更新
+  toggleTool: (toolId: string, planIndex?: number) => void;
+  updateToolPlan: (toolId: string, planIndex: number) => void;
   updateToolCustomPrice: (toolId: string, monthlyFee?: number, annualFee?: number, isAnnual?: boolean) => void;
   
   // 詳細情報管理
@@ -118,132 +127,142 @@ export const useUnifiedStore = create<UnifiedSimulatorState>()(
       industry: 'IT',
       employeeCount: 50,
       headquarters: '',
+      prefecture: '',
+      city: '',
       selectedTools: [],
       currentChallenges: [],
       expectedImprovements: [],
+      availableSubsidies: [],
+      subsidyPlan: null,
+      isLoadingSubsidies: false,
       mode: 'simple',
       calculationResults: null,
       
-      // アクション実装
+      // アクション
       setCompanyName: (name) => set({ companyName: name }),
       setIndustry: (industry) => set({ industry }),
       setEmployeeCount: (count) => set({ employeeCount: count }),
       setHeadquarters: (headquarters) => set({ headquarters }),
+      setPrefecture: (prefecture) => set({ prefecture }),
+      setCity: (city) => set({ city }),
       setMode: (mode) => set({ mode }),
       
-      // ツール管理
-      toggleTool: (toolId) => {
-        const state = get();
-        const existingIndex = state.selectedTools.findIndex(t => t.id === toolId);
+      // ツール管理 - 更新
+      toggleTool: (toolId, planIndex) => {
+        const { selectedTools } = get();
+        const existingIndex = selectedTools.findIndex(st => st.toolId === toolId);
         
         if (existingIndex >= 0) {
-          // ツールを削除
-          const newTools = state.selectedTools.filter(t => t.id !== toolId);
-          set({ selectedTools: newTools });
+          // ツールが既に選択されている場合は削除
+          const newSelectedTools = selectedTools.filter(st => st.toolId !== toolId);
+          set({ selectedTools: newSelectedTools });
         } else {
-          // ツールを追加
+          // ツールが選択されていない場合は追加
           const tool = tools.find(t => t.id === toolId);
           if (tool) {
-            const newTool: UnifiedTool = {
-              id: tool.id,
-              name: tool.name,
-              category: tool.category,
-              pricePerUser: tool.pricePerUser,
-            };
-            set({ selectedTools: [...state.selectedTools, newTool] });
+            const defaultPlanIndex = planIndex !== undefined ? planIndex : (tool.defaultPlanIndex || 0);
+            const newSelectedTools = [...selectedTools, { toolId, planIndex: defaultPlanIndex }];
+            set({ selectedTools: newSelectedTools });
           }
         }
       },
+
+      updateToolPlan: (toolId, planIndex) => {
+        const { selectedTools } = get();
+        const updatedTools = selectedTools.map(st => 
+          st.toolId === toolId ? { ...st, planIndex } : st
+        );
+        set({ selectedTools: updatedTools });
+      },
       
       updateToolCustomPrice: (toolId, monthlyFee, annualFee, isAnnual) => {
-        const state = get();
-        const updatedTools = state.selectedTools.map(tool => {
-          if (tool.id === toolId) {
-            return {
-              ...tool,
-              customMonthlyFee: monthlyFee,
-              customAnnualFee: annualFee,
-              isAnnualBilling: isAnnual,
-            };
-          }
-          return tool;
-        });
-        set({ selectedTools: updatedTools });
+        // カスタム価格機能は後で実装
+        console.log('Custom pricing not yet implemented');
       },
       
       // 詳細情報管理
       setChallenges: (challenges) => set({ currentChallenges: challenges }),
       setImprovements: (improvements) => set({ expectedImprovements: improvements }),
       
-      // 計算ロジック
+      // 補助金関連
+      searchSubsidies: async () => {
+        // 補助金検索機能は後で実装
+        console.log('Subsidy search not yet implemented');
+      },
+      
+      generateSubsidyPlan: () => {
+        // 補助金プラン生成機能は後で実装
+        console.log('Subsidy plan generation not yet implemented');
+      },
+      
+      // 計算
       calculateResults: () => {
         try {
-          const state = get();
-          const { selectedTools, employeeCount } = state;
+          const { selectedTools, employeeCount } = get();
           
-          if (selectedTools.length === 0) {
+          if (selectedTools.length === 0 || employeeCount <= 0) {
             set({ calculationResults: null });
             return;
           }
+
+          // 現在のツールコストを計算
+          let currentMonthlyCost = 0;
           
-          // 現在のツールコスト計算
-          const currentMonthlyCost = selectedTools.reduce((total, tool) => {
-            if (tool.customMonthlyFee !== undefined) {
-              return total + tool.customMonthlyFee;
+          selectedTools.forEach(selectedTool => {
+            const tool = tools.find(t => t.id === selectedTool.toolId);
+            if (tool && tool.pricingPlans[selectedTool.planIndex]) {
+              const plan = tool.pricingPlans[selectedTool.planIndex];
+              currentMonthlyCost += plan.pricePerUser * employeeCount;
             }
-            if (tool.customAnnualFee !== undefined && tool.isAnnualBilling) {
-              return total + (tool.customAnnualFee / 12);
-            }
-            return total + (tool.pricePerUser * employeeCount);
-          }, 0);
-          
+          });
+
           const currentAnnualCost = currentMonthlyCost * 12;
           
-          // Larkコスト計算
+          // Larkのコスト
           const larkMonthlyCost = LARK_PRICE_PER_USER * employeeCount;
           const larkAnnualCost = larkMonthlyCost * 12;
           
-          // 削減額計算
+          // 節約額
           const monthlySavings = Math.max(0, currentMonthlyCost - larkMonthlyCost);
           const annualSavings = monthlySavings * 12;
           
-          // 削減率計算
+          // 節約率
           const savingsPercentage = currentMonthlyCost > 0 
             ? safeDivision(monthlySavings, currentMonthlyCost) * 100 
             : 0;
           
-          // ROI計算（年間削減額 / Lark年間コスト）
-          const roi = larkAnnualCost > 0 
-            ? safeDivision(annualSavings, larkAnnualCost) * 100 
+          // ROI計算（年間）
+          const roi = currentAnnualCost > 0 
+            ? safeDivision(annualSavings, currentAnnualCost) * 100 
             : 0;
           
-          // 回収期間計算（月）
+          // 回収期間（月）
           const paybackPeriod = monthlySavings > 0 
-            ? safeDivision(larkMonthlyCost, monthlySavings) 
+            ? safeDivision(larkAnnualCost, monthlySavings) 
             : 0;
-          
-          // 労働時間削減効果の推定
-          const estimatedHoursSavedPerEmployee = selectedTools.length * 2; // ツール1つあたり月2時間削減と仮定
-          const laborHoursSaved = estimatedHoursSavedPerEmployee * employeeCount;
+
+          // 労働時間節約の推定
+          const laborHoursSaved = selectedTools.length * employeeCount * 2; // 1ツールあたり2時間/月の節約と仮定
           const laborCostSaved = laborHoursSaved * AVERAGE_HOURLY_WAGE;
-          
+
           const results = {
-            currentMonthlyCost: safeParseFloat(currentMonthlyCost),
-            currentAnnualCost: safeParseFloat(currentAnnualCost),
-            larkMonthlyCost: safeParseFloat(larkMonthlyCost),
-            larkAnnualCost: safeParseFloat(larkAnnualCost),
-            monthlySavings: safeParseFloat(monthlySavings),
-            annualSavings: safeParseFloat(annualSavings),
-            savingsPercentage: safeParseFloat(savingsPercentage),
-            roi: safeParseFloat(roi),
-            paybackPeriod: safeParseFloat(paybackPeriod),
-            laborHoursSaved: safeParseFloat(laborHoursSaved),
-            laborCostSaved: safeParseFloat(laborCostSaved),
+            currentMonthlyCost,
+            currentAnnualCost,
+            larkMonthlyCost,
+            larkAnnualCost,
+            monthlySavings,
+            annualSavings,
+            savingsPercentage,
+            roi,
+            paybackPeriod,
+            laborHoursSaved,
+            laborCostSaved,
           };
-          
+
           set({ calculationResults: results });
+          
         } catch (error) {
-          ErrorHandler.logError('Calculation failed', error);
+          ErrorHandler.logError('Calculation error', error);
           set({ calculationResults: null });
         }
       },
@@ -255,10 +274,11 @@ export const useUnifiedStore = create<UnifiedSimulatorState>()(
           industry: 'IT',
           employeeCount: 50,
           headquarters: '',
+          prefecture: '',
+          city: '',
           selectedTools: [],
           currentChallenges: [],
           expectedImprovements: [],
-          mode: 'simple',
           calculationResults: null,
         });
       },

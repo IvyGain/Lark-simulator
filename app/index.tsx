@@ -17,6 +17,7 @@ export default function ToolSelectionScreen() {
     selectedTools, 
     employeeCount, 
     toggleTool, 
+    updateToolPlan,
     setEmployeeCount,
     companyName,
     industry,
@@ -101,23 +102,43 @@ export default function ToolSelectionScreen() {
     }
   };
 
-  // Get categories and translate them
   const categories = Object.keys(toolsByCategory);
 
-  const renderStep = () => {
+  const industries = [
+    'IT・ソフトウェア',
+    '製造業',
+    '金融・保険',
+    '小売・EC',
+    '医療・ヘルスケア',
+    '教育',
+    '不動産',
+    'コンサルティング',
+    'その他'
+  ];
+
+  const prefectures = [
+    '東京都', '大阪府', '神奈川県', '愛知県', '埼玉県', '千葉県', '兵庫県', '北海道',
+    '福岡県', '静岡県', '茨城県', '広島県', '京都府', '宮城県', '新潟県', '長野県',
+    '岐阜県', '栃木県', '群馬県', '岡山県', '福島県', '三重県', '熊本県', '鹿児島県',
+    '沖縄県', '青森県', '岩手県', '秋田県', '山形県', '山梨県', '富山県', '石川県',
+    '福井県', '滋賀県', '奈良県', '和歌山県', '鳥取県', '島根県', '山口県', '徳島県',
+    '香川県', '愛媛県', '高知県', '佐賀県', '長崎県', '宮崎県', '大分県'
+  ];
+
+  const renderStepContent = () => {
     switch (currentStep) {
       case 1:
         return (
           <View style={styles.stepContainer}>
             <Text style={styles.stepTitle}>会社名をお聞かせください</Text>
-            <Text style={styles.stepSubtitle}>シミュレーション結果を元に提案書を作成します</Text>
+            <Text style={styles.stepSubtitle}>シミュレーション結果をカスタマイズします</Text>
             <View style={styles.inputContainer}>
               <Text style={styles.inputLabel}>会社名</Text>
               <TextInput
                 style={styles.textInput}
                 value={companyName}
                 onChangeText={setCompanyName}
-                placeholder="株式会社サンプル"
+                placeholder="例：株式会社サンプル"
                 placeholderTextColor={Colors.gray[400]}
               />
             </View>
@@ -127,16 +148,22 @@ export default function ToolSelectionScreen() {
       case 2:
         return (
           <View style={styles.stepContainer}>
-            <Text style={styles.stepTitle}>業種をお選びください</Text>
-            <Text style={styles.stepSubtitle}>業種に応じた最適なソリューションを提案します</Text>
+            <Text style={styles.stepTitle}>業界をお選びください</Text>
+            <Text style={styles.stepSubtitle}>業界に応じた最適な提案を行います</Text>
             <View style={styles.industryGrid}>
-              {['IT・ソフトウェア', '製造業', '商社・貿易', '建設・不動産', '医療・ヘルスケア', 'その他'].map((ind) => (
+              {industries.map((ind) => (
                 <TouchableOpacity
                   key={ind}
-                  style={[styles.industryButton, industry === ind && styles.industryButtonSelected]}
+                  style={[
+                    styles.industryButton,
+                    industry === ind && styles.industryButtonSelected
+                  ]}
                   onPress={() => setIndustry(ind)}
                 >
-                  <Text style={[styles.industryButtonText, industry === ind && styles.industryButtonTextSelected]}>
+                  <Text style={[
+                    styles.industryButtonText,
+                    industry === ind && styles.industryButtonTextSelected
+                  ]}>
                     {ind}
                   </Text>
                 </TouchableOpacity>
@@ -168,8 +195,9 @@ export default function ToolSelectionScreen() {
                   key={category}
                   category={categoryTranslations[category] || category}
                   tools={toolsByCategory[category]}
-                  selectedTools={selectedTools.map(tool => tool.id)}
+                  selectedTools={selectedTools}
                   onToggleTool={toggleTool}
+                  onPlanChange={updateToolPlan}
                 />
               ))}
             </View>
@@ -205,41 +233,32 @@ export default function ToolSelectionScreen() {
           </View>
         </View>
       </View>
-      
-      <ScrollView 
-        style={styles.scrollView}
-        contentContainerStyle={[styles.scrollContent, { paddingHorizontal: horizontalPadding, paddingVertical: verticalPadding }]}
-        showsVerticalScrollIndicator={false}
-      >
-        {currentStep === 1 && (
-          <View style={{ width: isDesktop ? containerWidth : '100%', alignSelf: 'center' }}>
+
+      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
+        <View style={[styles.controlsContainer, { width: containerWidth }]}>
+          <View style={[styles.controlsInner, { width: maxContentWidth }]}>
             <ImpactfulHook />
-          </View>
-        )}
-        
-        <View style={[{ width: isDesktop ? containerWidth : '100%', alignSelf: 'center' }]}>
-          {renderStep()}
-        </View>
-        
-        <View style={[styles.footer, { width: isDesktop ? Math.min(containerWidth, 600) : '100%', alignSelf: 'center' }]}>
-          <View style={styles.buttonRow}>
-            {currentStep > 1 && (
-              <Button
-                title="戻る"
-                onPress={handleBack}
-                variant="outline"
-                size={isDesktop ? "large" : "medium"}
-                style={styles.backButton}
-              />
-            )}
-            <Button
-              title={currentStep === 4 ? "シミュレーション結果を見る" : "次へ"}
-              onPress={handleNext}
-              disabled={!canProceed()}
-              loading={isLoading}
-              size={isDesktop ? "large" : "medium"}
-              style={styles.nextButton}
-            />
+            
+            {renderStepContent()}
+            
+            <View style={styles.footer}>
+              <View style={[styles.buttonRow, { width: maxContentWidth }]}>
+                {currentStep > 1 && (
+                  <Button
+                    title="戻る"
+                    onPress={handleBack}
+                    variant="secondary"
+                    style={styles.backButton}
+                  />
+                )}
+                <Button
+                  title={currentStep === 4 ? (isLoading ? "計算中..." : "結果を見る") : "次へ"}
+                  onPress={handleNext}
+                  disabled={!canProceed() || isLoading}
+                  style={currentStep === 1 ? { flex: 1 } : styles.nextButton}
+                />
+              </View>
+            </View>
           </View>
         </View>
       </ScrollView>

@@ -7,12 +7,12 @@ import { Tool, PricingPlan } from "@/constants/tools";
 interface ToolCheckboxWithPlansProps {
   tool: Tool;
   isSelected: boolean;
-  selectedPlanIndex?: number;
-  onToggle: (id: string, planIndex?: number) => void;
-  onPlanChange?: (toolId: string, planIndex: number) => void;
+  selectedPlanIndex: number;
+  onToggle: () => void;
+  onPlanChange: (planIndex: number) => void;
 }
 
-export default function ToolCheckboxWithPlans({
+export function ToolCheckboxWithPlans({
   tool,
   isSelected,
   selectedPlanIndex,
@@ -21,23 +21,11 @@ export default function ToolCheckboxWithPlans({
 }: ToolCheckboxWithPlansProps) {
   const [showPlanModal, setShowPlanModal] = useState(false);
   
-  const currentPlan = tool.pricingPlans[selectedPlanIndex || tool.defaultPlanIndex || 0];
+  const currentPlan = tool.pricingPlans[selectedPlanIndex] || tool.pricingPlans[tool.defaultPlanIndex || 0];
   const hasMultiplePlans = tool.pricingPlans.length > 1;
 
-  const handleToggle = () => {
-    if (!isSelected) {
-      // When selecting a tool, use the default plan
-      onToggle(tool.id, tool.defaultPlanIndex || 0);
-    } else {
-      // When deselecting, just toggle off
-      onToggle(tool.id);
-    }
-  };
-
   const handlePlanSelect = (planIndex: number) => {
-    if (onPlanChange) {
-      onPlanChange(tool.id, planIndex);
-    }
+    onPlanChange(planIndex);
     setShowPlanModal(false);
   };
 
@@ -55,7 +43,7 @@ export default function ToolCheckboxWithPlans({
           styles.container,
           isSelected && styles.containerSelected,
         ]}
-        onPress={handleToggle}
+        onPress={onToggle}
       >
         <View style={[styles.iconContainer, isSelected && styles.iconContainerSelected]}>
           <FontAwesome
@@ -104,14 +92,10 @@ export default function ToolCheckboxWithPlans({
         animationType="fade"
         onRequestClose={() => setShowPlanModal(false)}
       >
-        <TouchableOpacity 
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={() => setShowPlanModal(false)}
-        >
+        <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>{tool.name} プラン選択</Text>
+              <Text style={styles.modalTitle}>{tool.name} - プラン選択</Text>
               <TouchableOpacity onPress={() => setShowPlanModal(false)}>
                 <FontAwesome name="times" size={20} color={Colors.gray[600]} />
               </TouchableOpacity>
@@ -123,40 +107,38 @@ export default function ToolCheckboxWithPlans({
                   key={index}
                   style={[
                     styles.planItem,
-                    index === selectedPlanIndex && styles.planItemSelected
+                    selectedPlanIndex === index && styles.planItemSelected,
                   ]}
                   onPress={() => handlePlanSelect(index)}
                 >
                   <View style={styles.planInfo}>
                     <Text style={[
                       styles.planName,
-                      index === selectedPlanIndex && styles.planNameSelected
+                      selectedPlanIndex === index && styles.planNameSelected,
                     ]}>
                       {plan.name}
                     </Text>
                     <Text style={[
                       styles.planPrice,
-                      index === selectedPlanIndex && styles.planPriceSelected
+                      selectedPlanIndex === index && styles.planPriceSelected,
                     ]}>
                       ¥{plan.pricePerUser.toLocaleString()}/人/月
                     </Text>
-                    {plan.description && (
-                      <Text style={[
-                        styles.planDescription,
-                        index === selectedPlanIndex && styles.planDescriptionSelected
-                      ]}>
-                        {plan.description}
-                      </Text>
-                    )}
+                    <Text style={[
+                      styles.planDescription,
+                      selectedPlanIndex === index && styles.planDescriptionSelected,
+                    ]}>
+                      {plan.description}
+                    </Text>
                   </View>
-                  {index === selectedPlanIndex && (
+                  {selectedPlanIndex === index && (
                     <FontAwesome name="check" size={16} color={Colors.white} />
                   )}
                 </TouchableOpacity>
               ))}
             </ScrollView>
           </View>
-        </TouchableOpacity>
+        </View>
       </Modal>
     </>
   );
@@ -249,7 +231,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255, 255, 255, 0.2)",
     borderColor: Colors.white,
   },
-  
   // Modal styles
   modalOverlay: {
     flex: 1,

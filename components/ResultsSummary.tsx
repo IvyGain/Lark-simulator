@@ -4,34 +4,24 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '../constants/colors';
 import { spacing, isDesktop } from '../constants/responsive';
 
-interface ToolWithPrice {
-  tool: {
-    id: string;
-    name: string;
-  };
-  price: number;
+interface SummaryMetrics {
+  annualCostReduction: number;
+  reductionRate: number;
+  roi: number;
+  paybackPeriod: number;
 }
 
 interface ResultsSummaryProps {
-  currentMonthlyCost: number;
-  larkMonthlyCost: number;
-  monthlySavings: number;
-  annualSavings: number;
-  selectedTools: ToolWithPrice[];
-  teamSize: number;
+  metrics: SummaryMetrics;
+  companyName?: string;
+  employeeCount: number;
 }
 
 export function ResultsSummary({
-  currentMonthlyCost,
-  larkMonthlyCost,
-  monthlySavings,
-  annualSavings,
-  selectedTools,
-  teamSize,
+  metrics,
+  companyName,
+  employeeCount,
 }: ResultsSummaryProps) {
-  const savingsPercentage = currentMonthlyCost > 0 ? Math.round((monthlySavings / currentMonthlyCost) * 100) : 0;
-  const roi = larkMonthlyCost > 0 ? Math.round((annualSavings / (larkMonthlyCost * 12)) * 100) : 0;
-  const paybackPeriod = monthlySavings > 0 ? Math.round((larkMonthlyCost * 12) / annualSavings * 12) : 0;
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('ja-JP', {
       style: 'currency',
@@ -51,9 +41,9 @@ export function ResultsSummary({
       >
         <View style={styles.heroContent}>
           <Text style={styles.heroLabel}>年間削減コスト</Text>
-          <Text style={styles.heroAmount}>{formatCurrency(annualSavings)}</Text>
+          <Text style={styles.heroAmount}>{formatCurrency(metrics.annualCostReduction)}</Text>
           <View style={styles.heroPercentageContainer}>
-            <Text style={styles.heroPercentage}>{savingsPercentage}%</Text>
+            <Text style={styles.heroPercentage}>{metrics.reductionRate.toFixed(1)}%</Text>
             <Text style={styles.heroPercentageLabel}>削減</Text>
           </View>
         </View>
@@ -71,7 +61,7 @@ export function ResultsSummary({
           >
             <Text style={styles.metricIcon}>📈</Text>
             <Text style={styles.metricLabel}>ROI</Text>
-            <Text style={styles.metricValue}>{roi}%</Text>
+            <Text style={styles.metricValue}>{metrics.roi.toFixed(1)}%</Text>
           </LinearGradient>
         </View>
 
@@ -82,7 +72,7 @@ export function ResultsSummary({
           >
             <Text style={styles.metricIcon}>⏱️</Text>
             <Text style={styles.metricLabel}>投資回収期間</Text>
-            <Text style={styles.metricValue}>{paybackPeriod}ヶ月</Text>
+            <Text style={styles.metricValue}>{metrics.paybackPeriod.toFixed(1)}ヶ月</Text>
           </LinearGradient>
         </View>
       </View>
@@ -90,7 +80,7 @@ export function ResultsSummary({
       {/* Impact Statement */}
       <View style={styles.impactStatement}>
         <Text style={styles.impactText}>
-          Larkの導入により、年間で<Text style={styles.impactHighlight}>{formatCurrency(annualSavings)}</Text>のコスト削減を実現
+          {companyName ? `${companyName}では` : `${employeeCount}名規模の組織では`}、Larkの導入により年間で<Text style={styles.impactHighlight}>{formatCurrency(metrics.annualCostReduction)}</Text>のコスト削減を実現
         </Text>
       </View>
     </View>

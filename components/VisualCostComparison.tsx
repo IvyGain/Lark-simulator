@@ -3,22 +3,20 @@ import { View, Text, StyleSheet, Animated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '@/constants/colors';
 import { isDesktop, spacing } from '@/constants/responsive';
-import { LARK_PRICE_PER_USER } from '@/constants/tools';
 
 interface VisualCostComparisonProps {
   currentMonthlyCost: number;
-  employeeCount: number;
-  selectedTools: Array<{ toolId: string; monthlyFee: number }>;
+  larkMonthlyCost: number;
+  monthlySavings: number;
+  annualSavings: number;
 }
 
 export const VisualCostComparison: React.FC<VisualCostComparisonProps> = ({
   currentMonthlyCost,
-  employeeCount,
-  selectedTools,
+  larkMonthlyCost,
+  monthlySavings,
+  annualSavings,
 }) => {
-  const larkMonthlyCost = LARK_PRICE_PER_USER * employeeCount;
-  const monthlySavings = currentMonthlyCost - larkMonthlyCost;
-  const annualSavings = monthlySavings * 12;
   const savingsPercentage = currentMonthlyCost > 0 ? (monthlySavings / currentMonthlyCost) * 100 : 0;
 
   // Animation values
@@ -70,7 +68,7 @@ export const VisualCostComparison: React.FC<VisualCostComparisonProps> = ({
         <View style={styles.barColumn}>
           <View style={styles.barHeader}>
             <Text style={styles.barTitle}>現在のツール</Text>
-            <Text style={styles.barSubtitle}>{selectedTools.length}個のツール</Text>
+            <Text style={styles.barSubtitle}>複数ツール利用</Text>
           </View>
           
           <View style={styles.barContainer}>
@@ -111,7 +109,7 @@ export const VisualCostComparison: React.FC<VisualCostComparisonProps> = ({
         {/* Lark Cost Bar */}
         <View style={styles.barColumn}>
           <View style={styles.barHeader}>
-            <Text style={styles.barTitle}>Lark統合後</Text>
+            <Text style={styles.barTitle}>Lark</Text>
             <Text style={styles.barSubtitle}>オールインワン</Text>
           </View>
           
@@ -128,7 +126,7 @@ export const VisualCostComparison: React.FC<VisualCostComparisonProps> = ({
               ]}
             >
               <LinearGradient
-                colors={[Colors.primary, '#00A693']}
+                colors={[Colors.primary, Colors.primary + 'DD']}
                 style={styles.larkBar}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 0, y: 1 }}
@@ -146,32 +144,30 @@ export const VisualCostComparison: React.FC<VisualCostComparisonProps> = ({
       {/* Savings Highlight */}
       <Animated.View style={[styles.savingsContainer, { opacity: savingsOpacity }]}>
         <LinearGradient
-          colors={[Colors.success + '20', Colors.success + '30']}
+          colors={[Colors.success + '10', Colors.success + '20']}
           style={styles.savingsCard}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
         >
           <View style={styles.savingsContent}>
             <View style={styles.savingsIcon}>
-              <Text style={styles.savingsIconText}>💡</Text>
+              <Text style={styles.savingsIconText}>💰</Text>
             </View>
             <View style={styles.savingsDetails}>
-              <Text style={styles.savingsTitle}>削減効果</Text>
+              <Text style={styles.savingsTitle}>月間削減額</Text>
               <View style={styles.savingsAmountContainer}>
                 <Text style={styles.savingsAmount}>{formatCurrency(monthlySavings)}</Text>
-                <Text style={styles.savingsUnit}>月間削減</Text>
+                <Text style={styles.savingsUnit}>削減</Text>
               </View>
-              <Text style={styles.savingsAnnual}>年間 {formatCurrency(annualSavings)} の削減</Text>
+              <Text style={styles.savingsAnnual}>年間 {formatCurrency(annualSavings)} の削減効果</Text>
             </View>
             <View style={styles.savingsPercentage}>
-              <Text style={styles.percentageValue}>{Math.round(savingsPercentage)}%</Text>
+              <Text style={styles.percentageValue}>{savingsPercentage.toFixed(1)}%</Text>
               <Text style={styles.percentageLabel}>削減</Text>
             </View>
           </View>
         </LinearGradient>
       </Animated.View>
 
-      {/* Key Benefits */}
+      {/* Benefits */}
       <View style={styles.benefitsContainer}>
         <Text style={styles.benefitsTitle}>Lark導入のメリット</Text>
         <View style={styles.benefitsGrid}>
@@ -180,16 +176,16 @@ export const VisualCostComparison: React.FC<VisualCostComparisonProps> = ({
             <Text style={styles.benefitText}>ツール統合</Text>
           </View>
           <View style={styles.benefitItem}>
-            <Text style={styles.benefitIcon}>💰</Text>
-            <Text style={styles.benefitText}>コスト削減</Text>
-          </View>
-          <View style={styles.benefitItem}>
             <Text style={styles.benefitIcon}>⚡</Text>
             <Text style={styles.benefitText}>効率向上</Text>
           </View>
           <View style={styles.benefitItem}>
-            <Text style={styles.benefitIcon}>🤝</Text>
-            <Text style={styles.benefitText}>連携強化</Text>
+            <Text style={styles.benefitIcon}>💡</Text>
+            <Text style={styles.benefitText}>シンプル運用</Text>
+          </View>
+          <View style={styles.benefitItem}>
+            <Text style={styles.benefitIcon}>🛡️</Text>
+            <Text style={styles.benefitText}>セキュリティ</Text>
           </View>
         </View>
       </View>

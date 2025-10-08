@@ -7,46 +7,44 @@ interface ToolWithPrice {
   tool: {
     id: string;
     name: string;
+    pricePerUser: number;
+    planName?: string;
   };
-  price: number;
+  totalMonthlyCost: number;
 }
 
 interface ToolsBreakdownTableProps {
   selectedTools: ToolWithPrice[];
-  employeeCount: number;
-  larkPricePerUser?: number;
+  larkPricePerUser: number;
+  userCount: number;
 }
 
 export function ToolsBreakdownTable({ 
   selectedTools, 
-  employeeCount, 
-  larkPricePerUser = 1420 
+  larkPricePerUser,
+  userCount 
 }: ToolsBreakdownTableProps) {
-  const calculateMonthlyCost = (toolWithPrice: ToolWithPrice) => {
-    return toolWithPrice.price * employeeCount;
-  };
-
-  const totalCurrentCost = selectedTools.reduce((sum, toolWithPrice) => sum + calculateMonthlyCost(toolWithPrice), 0);
-  const larkMonthlyCost = larkPricePerUser * employeeCount;
+  const totalCurrentCost = selectedTools.reduce((sum, toolWithPrice) => sum + toolWithPrice.totalMonthlyCost, 0);
+  const larkMonthlyCost = larkPricePerUser * userCount;
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>現在のツール内訳</Text>
-      <Text style={styles.subtitle}>利用者数：{employeeCount}人</Text>
+      <Text style={styles.subtitle}>利用者数：{userCount}人</Text>
       
       <ScrollView style={styles.tableContainer} showsVerticalScrollIndicator={false}>
         {selectedTools.map((toolWithPrice, index) => {
-          const monthlyCost = calculateMonthlyCost(toolWithPrice);
-          const userCost = Math.round(toolWithPrice.price);
-          
           return (
             <View key={toolWithPrice.tool.id} style={styles.tableRow}>
               <View style={styles.toolNameContainer}>
                 <Text style={styles.toolName}>{toolWithPrice.tool.name}</Text>
+                {toolWithPrice.tool.planName && (
+                  <Text style={styles.planName}>{toolWithPrice.tool.planName}</Text>
+                )}
               </View>
               <View style={styles.costContainer}>
-                <Text style={styles.userCost}>¥{userCost}/人</Text>
-                <Text style={styles.totalCost}>¥{monthlyCost.toLocaleString()}/月</Text>
+                <Text style={styles.userCost}>¥{toolWithPrice.tool.pricePerUser.toLocaleString()}/人</Text>
+                <Text style={styles.totalCost}>¥{toolWithPrice.totalMonthlyCost.toLocaleString()}/月</Text>
               </View>
             </View>
           );
@@ -55,7 +53,7 @@ export function ToolsBreakdownTable({
         {/* Lark Comparison Row */}
         <View style={styles.larkRow}>
           <View style={styles.larkInfo}>
-            <Text style={styles.larkNote}>*Larkプランは4200円/人/月で全機能</Text>
+            <Text style={styles.larkNote}>*Larkプランは¥{larkPricePerUser.toLocaleString()}/人/月で全機能</Text>
           </View>
         </View>
       </ScrollView>
@@ -82,76 +80,94 @@ export function ToolsBreakdownTable({
 const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.white,
-    borderRadius: 12,
-    padding: spacing.lg,
+    borderRadius: 16,
+    padding: spacing.xl,
     marginBottom: spacing.lg,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 8,
+    borderWidth: 1,
+    borderColor: Colors.gray[100],
   },
   title: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 24,
+    fontWeight: '800',
     color: Colors.text,
     marginBottom: spacing.xs,
+    textAlign: 'center',
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: 16,
     color: Colors.gray[600],
-    marginBottom: spacing.lg,
+    marginBottom: spacing.xl,
+    textAlign: 'center',
+    fontWeight: '500',
   },
   tableContainer: {
-    maxHeight: 300,
+    maxHeight: 350,
   },
   tableRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: spacing.sm,
+    paddingVertical: spacing.md,
     borderBottomWidth: 1,
     borderBottomColor: Colors.gray[200],
+    backgroundColor: Colors.gray[25],
+    marginVertical: 2,
+    paddingHorizontal: spacing.md,
+    borderRadius: 8,
   },
   toolNameContainer: {
     flex: 1,
   },
   toolName: {
-    fontSize: 16,
-    fontWeight: '500',
+    fontSize: 18,
+    fontWeight: '600',
     color: Colors.text,
+  },
+  planName: {
+    fontSize: 14,
+    color: Colors.gray[600],
+    fontWeight: '500',
+    marginTop: 2,
   },
   costContainer: {
     alignItems: 'flex-end',
   },
   userCost: {
-    fontSize: 12,
+    fontSize: 14,
     color: Colors.gray[600],
+    fontWeight: '500',
   },
   totalCost: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 18,
+    fontWeight: '700',
     color: Colors.text,
   },
   larkRow: {
-    paddingVertical: spacing.md,
+    paddingVertical: spacing.lg,
     borderBottomWidth: 1,
     borderBottomColor: Colors.gray[200],
   },
   larkInfo: {
-    backgroundColor: Colors.primary + '10',
-    padding: spacing.sm,
-    borderRadius: 6,
+    backgroundColor: Colors.primary + '15',
+    padding: spacing.md,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: Colors.primary + '30',
   },
   larkNote: {
-    fontSize: 12,
+    fontSize: 14,
     color: Colors.primary,
-    fontStyle: 'italic',
+    fontWeight: '600',
     textAlign: 'center',
   },
   summaryContainer: {
-    marginTop: spacing.md,
-    paddingTop: spacing.md,
+    marginTop: spacing.lg,
+    paddingTop: spacing.lg,
     borderTopWidth: 2,
     borderTopColor: Colors.gray[300],
   },
@@ -159,38 +175,41 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: spacing.xs,
+    paddingVertical: spacing.sm,
   },
   summaryLabel: {
-    fontSize: 16,
+    fontSize: 18,
     color: Colors.text,
+    fontWeight: '500',
   },
   summaryValue: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 18,
+    fontWeight: '700',
     color: Colors.text,
   },
   larkCost: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 18,
+    fontWeight: '700',
     color: Colors.primary,
   },
   savingsRow: {
-    backgroundColor: Colors.success + '10',
-    marginHorizontal: -spacing.sm,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.sm,
-    borderRadius: 6,
-    marginTop: spacing.sm,
+    backgroundColor: Colors.success + '15',
+    marginHorizontal: -spacing.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.md,
+    borderRadius: 12,
+    marginTop: spacing.md,
+    borderWidth: 1,
+    borderColor: Colors.success + '30',
   },
   savingsLabel: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 18,
+    fontWeight: '700',
     color: Colors.success,
   },
   savingsValue: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 20,
+    fontWeight: '800',
     color: Colors.success,
   },
-});
+})
