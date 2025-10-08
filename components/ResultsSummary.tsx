@@ -89,132 +89,146 @@ export function ResultsSummary({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: spacing.xxl, // Increased spacing
-    transform: [{ scale: 1.02 }], // Slightly larger overall
+    backgroundColor: Colors.white,
+    borderRadius: 24,
+    padding: spacing.xl * 1.8,
+    marginBottom: spacing.xl * 1.5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.25,
+    shadowRadius: 20,
+    elevation: 16,
+    borderWidth: 1,
+    borderColor: Colors.gray[100],
+    minHeight: 450,
+    transform: [{ scale: 1.02 }],
   },
   heroCard: {
-    borderRadius: 24, // Increased from 20
-    padding: spacing.xxl + 8, // Increased padding significantly
-    marginBottom: spacing.xl, // Increased from lg
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    shadowColor: Colors.success,
-    shadowOffset: { width: 0, height: 12 }, // Enhanced shadow
-    shadowOpacity: 0.4, // Increased from 0.3
-    shadowRadius: 24, // Increased from 16
-    elevation: 16, // Increased from 12
-    minHeight: isDesktop ? 200 : 180, // Increased from 160/140
-  },
-  heroContent: {
-    flex: 1,
+    borderRadius: 20,
+    padding: spacing.xl * 1.5,
+    marginBottom: spacing.xl * 1.5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.2,
+    shadowRadius: 16,
+    elevation: 12,
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    minHeight: 180,
   },
   heroLabel: {
-    fontSize: isDesktop ? 24 : 22, // Increased from 20/18
-    fontWeight: '700', // Increased from '600'
-    color: Colors.white,
-    marginBottom: spacing.md, // Increased from sm
-    opacity: 0.95, // Slightly more opaque
+    fontSize: 20,
+    fontWeight: '700',
+    color: 'rgba(255, 255, 255, 0.95)',
+    marginBottom: spacing.sm,
+    textAlign: 'center',
+    letterSpacing: 0.5,
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   heroAmount: {
-    fontSize: isDesktop ? 52 : 46, // Significantly increased from 42/36
+    fontSize: 48,
     fontWeight: '900',
-    color: Colors.white,
-    marginBottom: spacing.lg, // Increased from md
-    letterSpacing: -1.5, // Slightly more negative spacing
-    textShadowColor: 'rgba(0,0,0,0.3)',
+    color: 'white',
+    textAlign: 'center',
+    marginBottom: spacing.xs,
+    letterSpacing: -1,
+    textShadowColor: 'rgba(0, 0, 0, 0.4)',
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 4,
-  },
-  heroPercentageContainer: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
   },
   heroPercentage: {
-    fontSize: isDesktop ? 38 : 34, // Increased from 32/28
-    fontWeight: '900', // Increased from 'bold'
-    color: Colors.white,
-    marginRight: spacing.sm, // Increased from xs
-    textShadowColor: 'rgba(0,0,0,0.3)',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 4,
-  },
-  heroPercentageLabel: {
-    fontSize: isDesktop ? 22 : 20, // Increased from 18/16
-    fontWeight: '700', // Increased from '600'
-    color: Colors.white,
-    opacity: 0.95, // Slightly more opaque
-  },
-  heroIcon: {
-    marginLeft: spacing.xl, // Increased from lg
+    fontSize: 24,
+    fontWeight: '800',
+    color: 'rgba(255, 255, 255, 0.9)',
+    textAlign: 'center',
+    letterSpacing: 0.5,
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   heroIconText: {
-    fontSize: isDesktop ? 80 : 72, // Significantly increased from 64/56
-    textShadowColor: 'rgba(0,0,0,0.2)',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 4,
+    fontSize: 32,
+    marginBottom: spacing.sm,
+    textAlign: 'center',
   },
   metricsGrid: {
     flexDirection: 'row',
-    gap: spacing.lg, // Increased from md
-    marginBottom: spacing.xl, // Increased from lg
+    justifyContent: 'space-between',
+    marginBottom: spacing.xl * 1.5,
+    gap: spacing.md,
   },
   metricCard: {
     flex: 1,
-    borderRadius: 20, // Increased from 16
-    overflow: 'hidden',
-    shadowColor: Colors.black,
-    shadowOffset: { width: 0, height: 6 }, // Enhanced shadow
-    shadowOpacity: 0.15, // Increased from 0.1
-    shadowRadius: 12, // Increased from 8
-    elevation: 8, // Increased from 6
-    transform: [{ scale: 1.01 }], // Slightly larger
+    borderRadius: 18,
+    padding: spacing.lg * 1.2,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    minHeight: 140,
   },
   metricGradient: {
-    padding: spacing.xl, // Increased from lg
+    borderRadius: 18,
+    padding: spacing.lg * 1.2,
     alignItems: 'center',
-    minHeight: isDesktop ? 140 : 120, // Increased from 120/100
-    justifyContent: 'center',
+    minHeight: 140,
   },
   metricIcon: {
-    fontSize: isDesktop ? 40 : 36, // Increased from 32/28
-    marginBottom: spacing.md, // Increased from sm
+    fontSize: 28,
+    marginBottom: spacing.sm,
   },
   metricLabel: {
-    fontSize: isDesktop ? 18 : 16, // Increased from 16/14
-    fontWeight: '700', // Increased from '600'
-    color: Colors.text,
+    fontSize: 14,
+    fontWeight: '600',
+    color: 'rgba(255, 255, 255, 0.9)',
+    marginBottom: spacing.xs,
     textAlign: 'center',
-    marginBottom: spacing.sm, // Increased from xs
+    letterSpacing: 0.3,
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   metricValue: {
-    fontSize: isDesktop ? 32 : 28, // Increased from 28/24
-    fontWeight: '900', // Increased from 'bold'
-    color: Colors.text,
+    fontSize: 20,
+    fontWeight: '800',
+    color: 'white',
     textAlign: 'center',
+    letterSpacing: 0.5,
+    textShadowColor: 'rgba(0, 0, 0, 0.4)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 3,
   },
   impactStatement: {
-    backgroundColor: Colors.gray[50],
-    borderRadius: 16, // Increased from 12
-    padding: spacing.xl, // Increased from lg
-    borderLeftWidth: 6, // Increased from 4
-    borderLeftColor: Colors.success,
-    shadowColor: Colors.gray[300],
-    shadowOffset: { width: 0, height: 4 },
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    borderRadius: 18,
+    padding: spacing.xl,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowRadius: 12,
+    elevation: 6,
+    borderWidth: 1,
+    borderColor: Colors.gray[200],
+    minHeight: 100,
   },
   impactText: {
-    fontSize: isDesktop ? 20 : 18, // Increased from 18/16
-    fontWeight: '600', // Increased from '500'
+    fontSize: 18,
+    lineHeight: 26,
     color: Colors.text,
     textAlign: 'center',
-    lineHeight: isDesktop ? 32 : 28, // Increased from 28/24
+    fontWeight: '500',
+    letterSpacing: 0.3,
   },
   impactHighlight: {
-    fontWeight: '900', // Increased from 'bold'
-    color: Colors.success,
-    fontSize: isDesktop ? 22 : 20, // Slightly larger than base text
+    fontWeight: '800',
+    color: Colors.primary,
+    fontSize: 20,
+    letterSpacing: 0.5,
   },
 });
