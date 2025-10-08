@@ -1,489 +1,375 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Linking, Animated, TouchableOpacity } from 'react-native';
-import Colors from '@/constants/colors';
-import { isDesktop, spacing } from '@/constants/responsive';
-import Button from '@/components/Button';
-import { Ionicons } from '@expo/vector-icons';
+'use client'
+
+import React, { useEffect, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { LinearGradient } from '@/components/ui/linear-gradient'
+import { 
+  Rocket, 
+  Calendar, 
+  CheckCircle, 
+  Sparkles, 
+  ArrowRight, 
+  Star,
+  Zap,
+  Shield,
+  Users,
+  TrendingUp,
+  Clock,
+  Target
+} from 'lucide-react'
 
 interface CTASectionProps {
-  annualSavings?: number;
-  employeeCount?: number;
+  annualSavings?: number
+  employeeCount?: number
 }
 
 export const CTASection: React.FC<CTASectionProps> = ({
   annualSavings,
   employeeCount,
 }) => {
-  // アニメーション用の参照
-  const pulseAnim = useRef(new Animated.Value(1)).current;
-  const bounceAnim = useRef(new Animated.Value(0)).current;
-  const shimmerAnim = useRef(new Animated.Value(0)).current;
-  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const [isVisible, setIsVisible] = useState(false)
+  const [hoveredButton, setHoveredButton] = useState<string | null>(null)
+
+  useEffect(() => {
+    setIsVisible(true)
+  }, [])
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('ja-JP', {
       style: 'currency',
       currency: 'JPY',
       maximumFractionDigits: 0,
-    }).format(amount);
-  };
+    }).format(amount)
+  }
 
   const handleLarkInstall = () => {
-    // プレスアニメーション
-    Animated.sequence([
-      Animated.timing(scaleAnim, {
-        toValue: 0.95,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(scaleAnim, {
-        toValue: 1,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-    ]).start();
-
-    Linking.openURL('https://www.customercloud.co/lark-ivygain');
-  };
+    window.open('https://www.customercloud.co/lark-ivygain', '_blank')
+  }
 
   const handleConsultation = () => {
-    // プレスアニメーション
-    Animated.sequence([
-      Animated.timing(scaleAnim, {
-        toValue: 0.95,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(scaleAnim, {
-        toValue: 1,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-    ]).start();
+    window.open('https://ivygain-project.jp.larksuite.com/scheduler/1077edbc8cd5e47a', '_blank')
+  }
 
-    Linking.openURL('https://ivygain-project.jp.larksuite.com/scheduler/1077edbc8cd5e47a');
-  };
+  const benefits = [
+    {
+      icon: Zap,
+      title: '即座に導入開始',
+      description: '5分で始められる簡単セットアップ'
+    },
+    {
+      icon: Shield,
+      title: 'エンタープライズ級セキュリティ',
+      description: 'ISO27001認証取得済み'
+    },
+    {
+      icon: Users,
+      title: '無制限のユーザー招待',
+      description: 'チーム全体で効率化を実現'
+    },
+    {
+      icon: TrendingUp,
+      title: '生産性30%向上',
+      description: '実証済みの効果を体験'
+    }
+  ]
 
-  // マウント時のアニメーション
-  useEffect(() => {
-    // バウンスアニメーション
-    Animated.spring(bounceAnim, {
-      toValue: 1,
-      tension: 100,
-      friction: 8,
-      useNativeDriver: true,
-    }).start();
-
-    // パルスアニメーション（無限ループ）
-    const pulseAnimation = Animated.loop(
-      Animated.sequence([
-        Animated.timing(pulseAnim, {
-          toValue: 1.05,
-          duration: 1000,
-          useNativeDriver: true,
-        }),
-        Animated.timing(pulseAnim, {
-          toValue: 1,
-          duration: 1000,
-          useNativeDriver: true,
-        }),
-      ])
-    );
-    pulseAnimation.start();
-
-    // シマーアニメーション（無限ループ）
-    const shimmerAnimation = Animated.loop(
-      Animated.timing(shimmerAnim, {
-        toValue: 1,
-        duration: 2000,
-        useNativeDriver: true,
-      })
-    );
-    shimmerAnimation.start();
-
-    return () => {
-      pulseAnimation.stop();
-      shimmerAnimation.stop();
-    };
-  }, []);
-
-  // シマーエフェクトの位置計算
-  const shimmerTranslateX = shimmerAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [-100, 100],
-  });
+  const consultationFeatures = [
+    '無料コンサルテーション',
+    'カスタム導入プラン',
+    '専任サポート',
+    '成功事例の共有'
+  ]
 
   return (
-    <View style={styles.container}>
-      {/* ヒーローセクション */}
-      <View style={styles.heroSection}>
-        <View style={styles.heroIcon}>
-          <Ionicons name="rocket" size={32} color={Colors.white} />
-        </View>
-        <Text style={styles.heroTitle}>今すぐLarkで業務効率を革新しましょう</Text>
-        <Text style={styles.heroSubtitle}>
-          {annualSavings && employeeCount 
-            ? `${employeeCount}名規模で年間${formatCurrency(annualSavings)}の削減効果を実現`
-            : '数千社が選ぶ次世代コラボレーションツール'
-          }
-        </Text>
-        
-        {/* アニメーション付きヒーローCTAボタン */}
-        <Animated.View
-          style={[
-            styles.animatedButtonContainer,
-            {
-              transform: [
-                { scale: Animated.multiply(bounceAnim, pulseAnim) },
-              ],
-            },
-          ]}
-        >
-          <TouchableOpacity
-            style={styles.heroInstallButton}
-            onPress={handleLarkInstall}
-            activeOpacity={0.9}
-          >
-            {/* シマーエフェクト */}
-            <Animated.View
-              style={[
-                styles.shimmerOverlay,
-                {
-                  transform: [{ translateX: shimmerTranslateX }],
-                },
-              ]}
+    <div className="space-y-8">
+      {/* Hero CTA Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 50 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        <Card className="relative overflow-hidden border-0 shadow-2xl">
+          <LinearGradient
+            from="from-blue-600"
+            via="via-indigo-600"
+            to="to-purple-600"
+            className="absolute inset-0"
+          />
+          
+          {/* Animated background elements */}
+          <div className="absolute inset-0 overflow-hidden">
+            <motion.div
+              animate={{
+                scale: [1, 1.2, 1],
+                rotate: [0, 180, 360],
+              }}
+              transition={{
+                duration: 20,
+                repeat: Infinity,
+                ease: "linear"
+              }}
+              className="absolute -top-1/2 -right-1/2 w-full h-full bg-gradient-to-br from-white/10 to-transparent rounded-full"
             />
-            <View style={styles.buttonContent}>
-              <Text style={styles.heroButtonIcon}>🚀</Text>
-              <Text style={styles.heroButtonText}>Larkの無料インストールはこちら</Text>
-            </View>
-          </TouchableOpacity>
-        </Animated.View>
-      </View>
+            <motion.div
+              animate={{
+                scale: [1.2, 1, 1.2],
+                rotate: [360, 180, 0],
+              }}
+              transition={{
+                duration: 15,
+                repeat: Infinity,
+                ease: "linear"
+              }}
+              className="absolute -bottom-1/2 -left-1/2 w-full h-full bg-gradient-to-tr from-white/5 to-transparent rounded-full"
+            />
+          </div>
 
-      {/* 特典・メリット */}
-      <View style={styles.benefitsContainer}>
-        <View style={styles.benefitsHeader}>
-          <Ionicons name="gift" size={24} color={Colors.primary} />
-          <Text style={styles.benefitsTitle}>導入支援の内容</Text>
-        </View>
-        <Text style={styles.benefitsDescription}>
-          Larkの最大効率を発揮するためのノウハウを活かした無料相談構築設計をご支援します。
-        </Text>
-        <View style={styles.benefitsList}>
-          <View style={styles.benefitItem}>
-            <View style={styles.benefitIcon}>
-              <Ionicons name="construct" size={18} color={Colors.primary} />
-            </View>
-            <Text style={styles.benefitText}>業務基盤システム構築代行</Text>
-          </View>
-          <View style={styles.benefitItem}>
-            <View style={styles.benefitIcon}>
-              <Ionicons name="cloud-upload" size={18} color={Colors.primary} />
-            </View>
-            <Text style={styles.benefitText}>データ移行・初期設定の代行</Text>
-          </View>
-          <View style={styles.benefitItem}>
-            <View style={styles.benefitIcon}>
-              <Ionicons name="school" size={18} color={Colors.primary} />
-            </View>
-            <Text style={styles.benefitText}>社員向けオンボーディング研修・運用サポート</Text>
-          </View>
-          <View style={styles.benefitItem}>
-            <View style={styles.benefitIcon}>
-              <Ionicons name="headset" size={18} color={Colors.primary} />
-            </View>
-            <Text style={styles.benefitText}>導入後3ヶ月間の無料サポート</Text>
-          </View>
-          <View style={styles.benefitItem}>
-            <View style={styles.benefitIcon}>
-              <Ionicons name="settings" size={18} color={Colors.primary} />
-            </View>
-            <Text style={styles.benefitText}>カスタマイズ・運用最適化支援</Text>
-          </View>
-        </View>
-      </View>
+          <CardContent className="relative z-10 p-12 text-center">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+              className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-6"
+            >
+              <Rocket className="h-10 w-10 text-white" />
+            </motion.div>
 
-      {/* 無料相談案内 */}
-      <View style={styles.consultationBanner}>
-        <View style={styles.consultationIcon}>
-          <Ionicons name="chatbubbles" size={24} color={Colors.primary} />
-        </View>
-        <View style={styles.consultationContent}>
-          <Text style={styles.consultationTitle}>専門スタッフによる無料相談</Text>
-          <Text style={styles.consultationDescription}>
-            導入に関するご質問や具体的な活用方法について、経験豊富な専門スタッフが無料でサポートいたします。
-          </Text>
-          <View style={styles.consultationFeatures}>
-            <View style={styles.consultationFeature}>
-              <Ionicons name="time" size={16} color={Colors.success} />
-              <Text style={styles.consultationFeatureText}>最短30分で相談可能</Text>
-            </View>
-            <View style={styles.consultationFeature}>
-              <Ionicons name="videocam" size={16} color={Colors.success} />
-              <Text style={styles.consultationFeatureText}>オンライン・対面対応</Text>
-            </View>
-          </View>
-        </View>
-      </View>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="text-4xl md:text-5xl font-bold text-white mb-4"
+            >
+              今すぐLarkで業務効率を革新しましょう
+            </motion.h2>
 
-      {/* 導入に関するご質問・無料相談ボタン */}
-      <View style={styles.ctaButtons}>
-        <Button
-          title="💬 導入に関するご質問・無料相談"
-          onPress={handleConsultation}
-          variant="secondary"
-          size="large"
-          style={styles.consultationButton}
-        />
-      </View>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="text-xl text-white/90 mb-8 max-w-2xl mx-auto"
+            >
+              {annualSavings && employeeCount 
+                ? `${employeeCount}名規模で年間${formatCurrency(annualSavings)}の削減効果を実現`
+                : '50名規模で年間¥2,508,000の削減効果を実現'
+              }
+            </motion.p>
 
-      {/* フッター */}
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>
-          このシミュレーション結果は目安です。実際の導入効果については、
-          お気軽にお問い合わせください。
-        </Text>
-      </View>
-    </View>
-  );
-};
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+            >
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onHoverStart={() => setHoveredButton('install')}
+                onHoverEnd={() => setHoveredButton(null)}
+              >
+                <Button
+                  onClick={handleLarkInstall}
+                  size="lg"
+                  className="bg-white text-blue-600 hover:bg-white/90 font-bold px-8 py-4 text-lg shadow-xl relative overflow-hidden group"
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-purple-400/20"
+                    initial={{ x: '-100%' }}
+                    animate={{ x: hoveredButton === 'install' ? '100%' : '-100%' }}
+                    transition={{ duration: 0.6 }}
+                  />
+                  <span className="relative z-10 flex items-center gap-2">
+                    <Rocket className="h-5 w-5" />
+                    今すぐ無料で始める
+                    <ArrowRight className="h-5 w-5" />
+                  </span>
+                </Button>
+              </motion.div>
 
-const styles = StyleSheet.create({
-  container: {
-    marginTop: spacing.xl,
-  },
-  heroSection: {
-    backgroundColor: Colors.primary,
-    borderRadius: 16,
-    padding: spacing.xl,
-    marginBottom: spacing.lg,
-    alignItems: 'center',
-    shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
-    shadowRadius: 16,
-    elevation: 8,
-  },
-  heroIcon: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: Colors.primary + '20',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: spacing.md,
-  },
-  heroTitle: {
-    fontSize: isDesktop ? 24 : 20,
-    fontWeight: '800',
-    color: Colors.white,
-    textAlign: 'center',
-    marginBottom: spacing.sm,
-    lineHeight: isDesktop ? 32 : 28,
-  },
-  heroSubtitle: {
-    fontSize: isDesktop ? 16 : 14,
-    color: Colors.white + 'E0',
-    textAlign: 'center',
-    lineHeight: isDesktop ? 24 : 20,
-    marginBottom: spacing.lg,
-  },
-  animatedButtonContainer: {
-    marginTop: spacing.md,
-  },
-  heroInstallButton: {
-    backgroundColor: Colors.white,
-    shadowColor: Colors.black,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.2,
-    shadowRadius: 12,
-    elevation: 8,
-    borderRadius: 16,
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.lg,
-    minWidth: isDesktop ? 280 : 250,
-    overflow: 'hidden',
-    position: 'relative',
-  },
-  shimmerOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    width: 50,
-    height: '100%',
-    opacity: 0.7,
-  },
-  buttonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 1,
-  },
-  heroButtonIcon: {
-    fontSize: isDesktop ? 20 : 18,
-    marginRight: spacing.xs,
-  },
-  heroButtonText: {
-    fontSize: isDesktop ? 16 : 14,
-    fontWeight: '700',
-    color: Colors.primary,
-    textAlign: 'center',
-  },
-  ctaButtons: {
-    flexDirection: isDesktop ? 'row' : 'column',
-    gap: spacing.md,
-    marginBottom: spacing.lg,
-  },
-  installButton: {
-    flex: isDesktop ? 1 : undefined,
-    backgroundColor: Colors.primary,
-    shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
-    elevation: 8,
-    borderRadius: 12,
-  },
-  consultationButton: {
-    flex: isDesktop ? 1 : undefined,
-    backgroundColor: Colors.secondary,
-    shadowColor: Colors.secondary,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
-    elevation: 8,
-    borderRadius: 12,
-  },
-  benefitsContainer: {
-    backgroundColor: Colors.white,
-    borderRadius: 16,
-    padding: spacing.xl,
-    marginBottom: spacing.lg,
-    shadowColor: Colors.black,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 12,
-    elevation: 6,
-    borderWidth: 1,
-    borderColor: Colors.gray[200],
-  },
-  benefitsHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: spacing.lg,
-  },
-  benefitsTitle: {
-    fontSize: isDesktop ? 20 : 18,
-    fontWeight: '700',
-    color: Colors.gray[900],
-    marginLeft: spacing.sm,
-  },
-  benefitsDescription: {
-    fontSize: isDesktop ? 15 : 14,
-    color: Colors.gray[700],
-    lineHeight: isDesktop ? 22 : 20,
-    marginBottom: spacing.lg,
-    textAlign: 'center',
-  },
-  benefitsList: {
-    gap: spacing.md,
-  },
-  benefitItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colors.gray[50],
-    borderRadius: 12,
-    padding: spacing.md,
-  },
-  benefitIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: Colors.primary + '15',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: spacing.md,
-  },
-  benefitText: {
-    fontSize: isDesktop ? 15 : 14,
-    color: Colors.gray[700],
-    flex: 1,
-    fontWeight: '500',
-  },
-  consultationBanner: {
-    backgroundColor: `linear-gradient(135deg, ${Colors.primary}10, ${Colors.secondary}10)`,
-    borderRadius: 16,
-    padding: spacing.xl,
-    marginBottom: spacing.lg,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    borderWidth: 2,
-    borderColor: Colors.primary + '20',
-    shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  consultationIcon: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: Colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: spacing.lg,
-    shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  consultationContent: {
-    flex: 1,
-  },
-  consultationTitle: {
-    fontSize: isDesktop ? 20 : 18,
-    fontWeight: '700',
-    color: Colors.primary,
-    marginBottom: spacing.sm,
-  },
-  consultationDescription: {
-    fontSize: isDesktop ? 15 : 14,
-    color: Colors.gray[700],
-    lineHeight: isDesktop ? 22 : 20,
-    marginBottom: spacing.md,
-  },
-  consultationFeatures: {
-    flexDirection: isDesktop ? 'row' : 'column',
-    gap: spacing.sm,
-  },
-  consultationFeature: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  consultationFeatureText: {
-    fontSize: isDesktop ? 14 : 13,
-    fontWeight: '600',
-    color: Colors.success,
-    marginLeft: spacing.xs,
-  },
-  footer: {
-    backgroundColor: Colors.gray[100] as string,
-    borderRadius: 12,
-    padding: spacing.lg,
-    borderWidth: 1,
-    borderColor: Colors.gray[200],
-  },
-  footerText: {
-    fontSize: isDesktop ? 13 : 12,
-    color: Colors.gray[600],
-    textAlign: 'center',
-    lineHeight: isDesktop ? 20 : 18,
-  },
-});
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onHoverStart={() => setHoveredButton('consultation')}
+                onHoverEnd={() => setHoveredButton(null)}
+              >
+                <Button
+                  onClick={handleConsultation}
+                  variant="outline"
+                  size="lg"
+                  className="border-white/30 text-white hover:bg-white/10 font-bold px-8 py-4 text-lg backdrop-blur-sm"
+                >
+                  <Calendar className="h-5 w-5 mr-2" />
+                  専門家に相談する
+                </Button>
+              </motion.div>
+            </motion.div>
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      {/* Benefits Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 50 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+      >
+        <Card className="border-0 shadow-xl bg-gradient-to-br from-slate-50 to-blue-50">
+          <CardContent className="p-8">
+            <div className="text-center mb-8">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.5, type: "spring" }}
+                className="inline-flex items-center gap-2 mb-4"
+              >
+                <Sparkles className="h-6 w-6 text-blue-600" />
+                <h3 className="text-2xl font-bold text-slate-900">
+                  Larkを選ぶ理由
+                </h3>
+              </motion.div>
+              <p className="text-slate-600 text-lg max-w-2xl mx-auto">
+                世界中の企業が選ぶ、次世代のワークプラットフォーム
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {benefits.map((benefit, index) => (
+                <motion.div
+                  key={benefit.title}
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.7 + index * 0.1 }}
+                  whileHover={{ scale: 1.02, y: -5 }}
+                  className="group"
+                >
+                  <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/80 backdrop-blur-sm">
+                    <CardContent className="p-6">
+                      <div className="flex items-start gap-4">
+                        <div className="flex-shrink-0">
+                          <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <benefit.icon className="h-6 w-6 text-white" />
+                          </div>
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
+                            {benefit.title}
+                          </h4>
+                          <p className="text-slate-600 text-sm leading-relaxed">
+                            {benefit.description}
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      {/* Consultation Banner */}
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 50 }}
+        transition={{ duration: 0.8, delay: 0.4 }}
+      >
+        <Card className="border-0 shadow-xl bg-gradient-to-r from-emerald-50 to-teal-50 border-l-4 border-l-emerald-500">
+          <CardContent className="p-8">
+            <div className="flex flex-col lg:flex-row items-start gap-6">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.8, type: "spring" }}
+                className="flex-shrink-0"
+              >
+                <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-lg">
+                  <Calendar className="h-8 w-8 text-white" />
+                </div>
+              </motion.div>
+
+              <div className="flex-1">
+                <motion.h3
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.9 }}
+                  className="text-2xl font-bold text-slate-900 mb-3"
+                >
+                  専門家による無料コンサルテーション
+                </motion.h3>
+                
+                <motion.p
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 1 }}
+                  className="text-slate-600 mb-6 text-lg leading-relaxed"
+                >
+                  あなたの組織に最適な導入プランを、Lark認定エキスパートが無料でご提案します。
+                  導入から運用まで、成功への道筋を一緒に描きましょう。
+                </motion.p>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.1 }}
+                  className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6"
+                >
+                  {consultationFeatures.map((feature, index) => (
+                    <motion.div
+                      key={feature}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 1.2 + index * 0.1 }}
+                      className="flex items-center gap-2"
+                    >
+                      <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0" />
+                      <span className="text-sm font-medium text-slate-700">
+                        {feature}
+                      </span>
+                    </motion.div>
+                  ))}
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.3 }}
+                >
+                  <Button
+                    onClick={handleConsultation}
+                    className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300"
+                  >
+                    <Calendar className="h-5 w-5 mr-2" />
+                    今すぐ相談予約
+                    <ArrowRight className="h-5 w-5 ml-2" />
+                  </Button>
+                </motion.div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      {/* Footer Note */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isVisible ? 1 : 0 }}
+        transition={{ delay: 1.5 }}
+        className="text-center"
+      >
+        <Card className="bg-slate-50/50 border-slate-200/50">
+          <CardContent className="p-6">
+            <p className="text-sm text-slate-600 leading-relaxed">
+              <Star className="h-4 w-4 text-yellow-500 inline mr-1" />
+              30日間の無料トライアル期間中はいつでもキャンセル可能です。
+              クレジットカード情報の登録は不要です。
+            </p>
+          </CardContent>
+        </Card>
+      </motion.div>
+    </div>
+  )
+}

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '../constants/colors';
-import { spacing } from '../constants/responsive';
+import { spacing, isDesktop } from '../constants/responsive';
 import Button from './Button';
 
 interface StoryData {
@@ -48,198 +49,434 @@ export function PersonalizedStoryPreview({
     const problemScenarios: Record<string, { before: string; after: string }> = {
       '情報の分散': {
         before: '複数のツールに情報が分散し、必要な情報を探すのに時間がかかる日々',
-        after: 'Larkで全ての情報が一元管理され、検索一つで必要な情報にアクセス'
+        after: 'Larkで全ての情報が一元管理され、検索一つで必要な情報にすぐアクセス'
       },
       'コミュニケーションの非効率': {
-        before: 'メールやチャットが乱立し、重要な連絡を見逃すことも',
-        after: 'Larkの統合コミュニケーションで、優先度別に整理された効率的なやり取り'
+        before: 'メール、チャット、会議ツールがバラバラで、情報共有に時間がかかる',
+        after: 'Larkで全てのコミュニケーションが統合され、スムーズな情報共有を実現'
       },
-      '会議の多さ': {
-        before: '一日の大半を会議に費やし、実務時間が圧迫される',
-        after: 'Lark DocsとAI議事録で、会議時間を50%削減し、創造的な業務に集中'
+      'ツールコストの増大': {
+        before: '複数のツールの月額費用が積み重なり、予算を圧迫',
+        after: 'Lark一つで全機能をカバーし、大幅なコスト削減を実現'
       },
+      '会議の非効率': {
+        before: '会議の準備や議事録作成に多くの時間を費やし、本来の業務時間が削られる',
+        after: 'Larkの自動議事録機能で会議効率が向上し、本来の業務に集中できる'
+      }
     };
 
-    // ストーリーデータの生成
+    // 選択された課題に基づいてシナリオを生成
+    const selectedProblem = selectedProblems[0] || '情報の分散';
+    const scenario = problemScenarios[selectedProblem] || problemScenarios['情報の分散'];
     const persona = personaTemplates[industry] || personaTemplates['IT'];
-    const mainProblem = selectedProblems[0] || '情報の分散';
-    const scenario = problemScenarios[mainProblem] || problemScenarios['情報の分散'];
+
+    // キー結果を生成
+    const keyResults = [
+      `従業員${employeeCount}名での年間コスト削減効果`,
+      '業務効率向上による時間短縮',
+      'ツール統合による管理負荷軽減',
+      'セキュリティ強化とガバナンス向上'
+    ];
 
     setTimeout(() => {
       setStoryData({
         persona,
         beforeScenarioSummary: scenario.before,
         afterScenarioSummary: scenario.after,
-        keyResults: [
-          `${employeeCount}名の従業員の生産性が平均30%向上`,
-          '情報検索時間を月間100時間削減',
-          'プロジェクト遅延率が40%改善'
-        ]
+        keyResults
       });
       setIsGenerating(false);
-    }, 1000);
+    }, 2000);
   };
 
   useEffect(() => {
     generateStory();
   }, [industry, selectedProblems, employeeCount]);
 
-  if (isGenerating) {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color={Colors.primary} />
-        <Text style={styles.loadingText}>ストーリーを生成中...</Text>
-      </View>
-    );
-  }
-
-  if (!storyData) {
-    return null;
-  }
-
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{title}</Text>
-      
-      <View style={styles.storyCard}>
-        <View style={styles.personaSection}>
-          <Text style={styles.personaRole}>{storyData.persona.role}</Text>
-          <Text style={styles.personaName}>{storyData.persona.name}</Text>
+      {/* Header Section */}
+      <LinearGradient
+        colors={[Colors.primary + '15', Colors.primary + '25']}
+        style={styles.headerSection}
+      >
+        <Text style={styles.headerIcon}>📖</Text>
+        <View style={styles.headerContent}>
+          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.subtitle}>業界特化型シミュレーション</Text>
         </View>
+      </LinearGradient>
 
-        <View style={styles.scenarioSection}>
-          <View style={styles.beforeSection}>
-            <Text style={styles.scenarioLabel}>現在の課題</Text>
-            <Text style={styles.scenarioText}>{storyData.beforeScenarioSummary}</Text>
+      {isGenerating ? (
+        <View style={styles.loadingContainer}>
+          <LinearGradient
+            colors={[Colors.gray[50], Colors.gray[100]]}
+            style={styles.loadingCard}
+          >
+            <ActivityIndicator size="large" color={Colors.primary} />
+            <Text style={styles.loadingText}>貴社向けストーリーを生成中...</Text>
+            <Text style={styles.loadingSubtext}>業界特性と課題を分析しています</Text>
+          </LinearGradient>
+        </View>
+      ) : storyData ? (
+        <View style={styles.storyContainer}>
+          {/* Persona Section */}
+          <LinearGradient
+            colors={[Colors.white, Colors.gray[50]]}
+            style={styles.personaCard}
+          >
+            <View style={styles.personaHeader}>
+              <Text style={styles.personaIcon}>👤</Text>
+              <View style={styles.personaInfo}>
+                <Text style={styles.personaLabel}>想定ペルソナ</Text>
+                <Text style={styles.personaRole}>{storyData.persona.role}</Text>
+                <Text style={styles.personaName}>{storyData.persona.name}</Text>
+              </View>
+            </View>
+          </LinearGradient>
+
+          {/* Scenario Comparison */}
+          <View style={styles.scenarioContainer}>
+            <Text style={styles.scenarioTitle}>導入前後の変化</Text>
+            
+            {/* Before Section */}
+            <LinearGradient
+              colors={[Colors.danger + '15', Colors.danger + '25']}
+              style={styles.beforeCard}
+            >
+              <View style={styles.scenarioHeader}>
+                <Text style={styles.scenarioIcon}>😰</Text>
+                <View style={styles.scenarioContent}>
+                  <Text style={styles.scenarioLabel}>導入前の課題</Text>
+                  <Text style={styles.scenarioText}>{storyData.beforeScenarioSummary}</Text>
+                </View>
+              </View>
+            </LinearGradient>
+
+            {/* Arrow */}
+            <View style={styles.arrowContainer}>
+              <LinearGradient
+                colors={[Colors.primary, Colors.success]}
+                style={styles.arrowCircle}
+              >
+                <Text style={styles.arrow}>↓</Text>
+              </LinearGradient>
+              <Text style={styles.arrowLabel}>Lark導入</Text>
+            </View>
+
+            {/* After Section */}
+            <LinearGradient
+              colors={[Colors.success + '15', Colors.success + '25']}
+              style={styles.afterCard}
+            >
+              <View style={styles.scenarioHeader}>
+                <Text style={styles.scenarioIcon}>😊</Text>
+                <View style={styles.scenarioContent}>
+                  <Text style={styles.scenarioLabel}>導入後の改善</Text>
+                  <Text style={styles.scenarioText}>{storyData.afterScenarioSummary}</Text>
+                </View>
+              </View>
+            </LinearGradient>
           </View>
 
-          <View style={styles.arrowContainer}>
-            <Text style={styles.arrow}>↓</Text>
-          </View>
+          {/* Key Results */}
+          {storyData.keyResults && (
+            <LinearGradient
+              colors={[Colors.warning + '10', Colors.warning + '20']}
+              style={styles.resultsCard}
+            >
+              <View style={styles.resultsHeader}>
+                <Text style={styles.resultsIcon}>🎯</Text>
+                <Text style={styles.resultsTitle}>期待される効果</Text>
+              </View>
+              
+              <View style={styles.resultsList}>
+                {storyData.keyResults.map((result, index) => (
+                  <View key={index} style={styles.resultItem}>
+                    <View style={styles.resultBullet}>
+                      <Text style={styles.resultNumber}>{index + 1}</Text>
+                    </View>
+                    <Text style={styles.resultText}>{result}</Text>
+                  </View>
+                ))}
+              </View>
+            </LinearGradient>
+          )}
 
-          <View style={styles.afterSection}>
-            <Text style={styles.scenarioLabel}>Lark導入後</Text>
-            <Text style={styles.scenarioText}>{storyData.afterScenarioSummary}</Text>
+          {/* Action Button */}
+          <View style={styles.actionContainer}>
+            <LinearGradient
+              colors={[Colors.primary, Colors.primary + 'CC']}
+              style={styles.actionButton}
+            >
+              <TouchableOpacity 
+                style={styles.actionButtonContent}
+                onPress={onGenerateStory}
+              >
+                <Text style={styles.actionButtonIcon}>📄</Text>
+                <View style={styles.actionButtonText}>
+                  <Text style={styles.actionButtonTitle}>詳細提案書を生成</Text>
+                  <Text style={styles.actionButtonSubtitle}>カスタマイズされた提案書をダウンロード</Text>
+                </View>
+              </TouchableOpacity>
+            </LinearGradient>
           </View>
         </View>
-
-        {storyData.keyResults && (
-          <View style={styles.resultsSection}>
-            <Text style={styles.resultsTitle}>期待される効果</Text>
-            {storyData.keyResults.map((result, index) => (
-              <Text key={index} style={styles.resultItem}>• {result}</Text>
-            ))}
-          </View>
-        )}
-      </View>
-
-      {onGenerateStory && (
-        <Button
-          title="📖 ストーリー仕立ての提案書を詳しく見る"
-          onPress={onGenerateStory}
-          variant="primary"
-          size="medium"
-        />
-      )}
+      ) : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: spacing.lg,
-    backgroundColor: Colors.background,
-    borderRadius: 12,
-    marginBottom: spacing.lg,
+    backgroundColor: Colors.white,
+    borderRadius: 16,
+    marginBottom: spacing.xl,
+    shadowColor: Colors.black,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 8,
+    overflow: 'hidden',
+  },
+  headerSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: spacing.xl,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.primary + '20',
+  },
+  headerIcon: {
+    fontSize: isDesktop ? 48 : 40,
+    marginRight: spacing.lg,
+  },
+  headerContent: {
+    flex: 1,
   },
   title: {
-    fontSize: 22,
-    fontWeight: 'bold',
+    fontSize: isDesktop ? 24 : 20,
+    fontWeight: '900',
     color: Colors.text,
-    marginBottom: spacing.lg,
-    textAlign: 'center',
+    marginBottom: spacing.xs,
+  },
+  subtitle: {
+    fontSize: isDesktop ? 16 : 14,
+    fontWeight: '600',
+    color: Colors.primary,
+  },
+  loadingContainer: {
+    padding: spacing.xl,
+  },
+  loadingCard: {
+    borderRadius: 12,
+    padding: spacing.xl,
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: Colors.gray[200],
   },
   loadingText: {
-    marginTop: spacing.sm,
-    fontSize: 16,
-    color: Colors.textSecondary,
+    marginTop: spacing.lg,
+    fontSize: isDesktop ? 18 : 16,
+    fontWeight: '600',
+    color: Colors.text,
     textAlign: 'center',
   },
-  storyCard: {
-    backgroundColor: Colors.white,
-    borderRadius: 10,
-    padding: spacing.lg,
-    marginBottom: spacing.lg,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+  loadingSubtext: {
+    marginTop: spacing.xs,
+    fontSize: isDesktop ? 14 : 12,
+    color: Colors.gray[600],
+    textAlign: 'center',
   },
-  personaSection: {
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
-    paddingBottom: spacing.md,
-    marginBottom: spacing.lg,
+  storyContainer: {
+    padding: spacing.xl,
+  },
+  personaCard: {
+    borderRadius: 12,
+    padding: spacing.lg,
+    marginBottom: spacing.xl,
+    borderWidth: 2,
+    borderColor: Colors.gray[200],
+  },
+  personaHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  personaIcon: {
+    fontSize: isDesktop ? 40 : 32,
+    marginRight: spacing.md,
+  },
+  personaInfo: {
+    flex: 1,
+  },
+  personaLabel: {
+    fontSize: isDesktop ? 14 : 12,
+    fontWeight: '600',
+    color: Colors.gray[600],
+    marginBottom: spacing.xs,
   },
   personaRole: {
-    fontSize: 16,
-    color: Colors.textSecondary,
+    fontSize: isDesktop ? 16 : 14,
+    color: Colors.text,
     marginBottom: spacing.xs,
   },
   personaName: {
-    fontSize: 20,
+    fontSize: isDesktop ? 20 : 18,
+    fontWeight: 'bold',
+    color: Colors.primary,
+  },
+  scenarioContainer: {
+    marginBottom: spacing.xl,
+  },
+  scenarioTitle: {
+    fontSize: isDesktop ? 22 : 20,
     fontWeight: 'bold',
     color: Colors.text,
-  },
-  scenarioSection: {
+    textAlign: 'center',
     marginBottom: spacing.lg,
   },
-  beforeSection: {
-    backgroundColor: Colors.dangerLight,
-    padding: spacing.md,
-    borderRadius: 8,
-    marginBottom: spacing.sm,
+  beforeCard: {
+    borderRadius: 12,
+    padding: spacing.lg,
+    marginBottom: spacing.md,
+    borderWidth: 2,
+    borderColor: Colors.danger + '30',
   },
-  afterSection: {
-    backgroundColor: Colors.successLight,
-    padding: spacing.md,
-    borderRadius: 8,
+  afterCard: {
+    borderRadius: 12,
+    padding: spacing.lg,
+    marginTop: spacing.md,
+    borderWidth: 2,
+    borderColor: Colors.success + '30',
+  },
+  scenarioHeader: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  scenarioIcon: {
+    fontSize: isDesktop ? 32 : 28,
+    marginRight: spacing.md,
+  },
+  scenarioContent: {
+    flex: 1,
   },
   scenarioLabel: {
-    fontSize: 14,
+    fontSize: isDesktop ? 16 : 14,
     fontWeight: 'bold',
     color: Colors.text,
-    marginBottom: spacing.xs,
+    marginBottom: spacing.sm,
   },
   scenarioText: {
-    fontSize: 16,
+    fontSize: isDesktop ? 16 : 14,
     color: Colors.text,
-    lineHeight: 24,
+    lineHeight: isDesktop ? 24 : 20,
   },
   arrowContainer: {
     alignItems: 'center',
-    marginVertical: spacing.xs,
+    marginVertical: spacing.lg,
+  },
+  arrowCircle: {
+    width: isDesktop ? 60 : 50,
+    height: isDesktop ? 60 : 50,
+    borderRadius: isDesktop ? 30 : 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: spacing.sm,
+    shadowColor: Colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
   },
   arrow: {
-    fontSize: 24,
+    fontSize: isDesktop ? 28 : 24,
+    color: Colors.white,
+    fontWeight: 'bold',
+  },
+  arrowLabel: {
+    fontSize: isDesktop ? 14 : 12,
+    fontWeight: '600',
     color: Colors.primary,
   },
-  resultsSection: {
-    backgroundColor: Colors.primaryLight,
-    padding: spacing.md,
-    borderRadius: 8,
+  resultsCard: {
+    borderRadius: 12,
+    padding: spacing.lg,
+    marginBottom: spacing.xl,
+    borderWidth: 2,
+    borderColor: Colors.warning + '30',
+  },
+  resultsHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: spacing.lg,
+  },
+  resultsIcon: {
+    fontSize: isDesktop ? 32 : 28,
+    marginRight: spacing.md,
   },
   resultsTitle: {
-    fontSize: 16,
+    fontSize: isDesktop ? 20 : 18,
     fontWeight: 'bold',
     color: Colors.text,
-    marginBottom: spacing.sm,
+  },
+  resultsList: {
+    gap: spacing.md,
   },
   resultItem: {
-    fontSize: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  resultBullet: {
+    width: isDesktop ? 32 : 28,
+    height: isDesktop ? 32 : 28,
+    borderRadius: isDesktop ? 16 : 14,
+    backgroundColor: Colors.warning,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: spacing.md,
+  },
+  resultNumber: {
+    fontSize: isDesktop ? 14 : 12,
+    fontWeight: 'bold',
+    color: Colors.white,
+  },
+  resultText: {
+    fontSize: isDesktop ? 16 : 14,
     color: Colors.text,
+    flex: 1,
+    lineHeight: isDesktop ? 22 : 18,
+  },
+  actionContainer: {
+    marginTop: spacing.lg,
+  },
+  actionButton: {
+    borderRadius: 12,
+    shadowColor: Colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  actionButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: spacing.lg,
+  },
+  actionButtonIcon: {
+    fontSize: isDesktop ? 32 : 28,
+    marginRight: spacing.md,
+  },
+  actionButtonText: {
+    flex: 1,
+  },
+  actionButtonTitle: {
+    fontSize: isDesktop ? 18 : 16,
+    fontWeight: 'bold',
+    color: Colors.white,
     marginBottom: spacing.xs,
-    lineHeight: 20,
+  },
+  actionButtonSubtitle: {
+    fontSize: isDesktop ? 14 : 12,
+    color: Colors.white,
+    opacity: 0.9,
   },
 });

@@ -1,18 +1,25 @@
 import { create } from "zustand";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { LARK_PRICE_PER_USER } from "@/constants/tools";
+import { LARK_PRICE_PER_USER, tools, Tool } from "@/constants/tools";
+
+interface SelectedToolPlan {
+  toolId: string;
+  planIndex: number;
+}
 
 interface SimulatorState {
-  selectedTools: string[];
+  selectedTools: SelectedToolPlan[];
   userCount: number;
-  toggleTool: (toolId: string) => void;
+  toggleTool: (toolId: string, planIndex?: number) => void;
+  updateToolPlan: (toolId: string, planIndex: number) => void;
   setUserCount: (count: number) => void;
   resetSelection: () => void;
-  calculateCurrentCost: (toolPrices: Record<string, number>) => number;
+  calculateCurrentCost: () => number;
   calculateLarkCost: () => number;
-  calculateSavings: (toolPrices: Record<string, number>) => number;
+  calculateSavings: () => number;
   calculateAnnualCost: (monthlyCost: number) => number;
+  getSelectedToolsWithPrices: () => Array<{ tool: Tool; planIndex: number; price: number }>;
 }
 
 export const useSimulatorStore = create<SimulatorState>()(
@@ -21,18 +28,33 @@ export const useSimulatorStore = create<SimulatorState>()(
       selectedTools: [],
       userCount: 50,
       
-      toggleTool: (toolId: string) => {
+      toggleTool: (toolId: string, planIndex?: number) => {
         set((state) => {
-          if (state.selectedTools.includes(toolId)) {
+          const existingIndex = state.selectedTools.findIndex(item => item.toolId === toolId);
+          
+          if (existingIndex >= 0) {
+            // Remove tool if already selected
             return {
-              selectedTools: state.selectedTools.filter((id) => id !== toolId),
+              selectedTools: state.selectedTools.filter(item => item.toolId !== toolId),
             };
           } else {
+            // Add tool with specified plan or default plan
+            const tool = tools.find(t => t.id === toolId);
+            const selectedPlanIndex = planIndex !== undefined ? planIndex : (tool?.defaultPlanIndex || 0);
+            
             return {
-              selectedTools: [...state.selectedTools, toolId],
+              selectedTools: [...state.selectedTools, { toolId, planIndex: selectedPlanIndex }],
             };
           }
         });
+      },
+      
+      updateToolPlan: (toolId: string, planIndex: number) => {
+        set((state) => ({
+          selectedTools: state.selectedTools.map(item =>
+            item.toolId === toolId ? { ...item, planIndex } : item
+          ),
+        }));
       },
       
       setUserCount: (count: number) => {
@@ -43,12 +65,15 @@ export const useSimulatorStore = create<SimulatorState>()(
         set({ selectedTools: [], userCount: 50 });
       },
       
-      calculateCurrentCost: (toolPrices: Record<string, number>) => {
+      calculateCurrentCost: () => {
         const { selectedTools, userCount } = get();
-        return selectedTools.reduce(
-          (total, toolId) => total + (toolPrices[toolId] || 0) * userCount,
-          0
-        );
+        return selectedTools.reduce((total, selectedTool) => {
+          const tool = tools.find(t => t.id === selectedTool.toolId);
+          if (tool && tool.pricingPlans[selectedTool.planIndex]) {
+            return total + tool.pricingPlans[selectedTool.planIndex].pricePerUser * userCount;
+          }
+          return total;
+        }, 0);
       },
       
       calculateLarkCost: () => {
@@ -56,14 +81,29 @@ export const useSimulatorStore = create<SimulatorState>()(
         return LARK_PRICE_PER_USER * userCount;
       },
       
-      calculateSavings: (toolPrices: Record<string, number>) => {
-        const currentCost = get().calculateCurrentCost(toolPrices);
+      calculateSavings: () => {
+        const currentCost = get().calculateCurrentCost();
         const larkCost = get().calculateLarkCost();
         return currentCost - larkCost;
       },
       
       calculateAnnualCost: (monthlyCost: number) => {
         return monthlyCost * 12;
+      },
+      
+      getSelectedToolsWithPrices: () => {
+        const { selectedTools } = get();
+        return selectedTools.map(selectedTool => {
+          const tool = tools.find(t => t.id === selectedTool.toolId);
+          if (tool && tool.pricingPlans[selectedTool.planIndex]) {
+            return {
+              tool,
+              planIndex: selectedTool.planIndex,
+              price: tool.pricingPlans[selectedTool.planIndex].pricePerUser,
+            };
+          }
+          return null;
+        }).filter(Boolean) as Array<{ tool: Tool; planIndex: number; price: number }>;
       },
     }),
     {

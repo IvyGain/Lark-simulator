@@ -3,15 +3,16 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import Colors from '../constants/colors';
 import { spacing } from '../constants/responsive';
 
-interface Tool {
-  id: string;
-  name: string;
-  pricePerUser: number;
-  customMonthlyFee?: number;
+interface ToolWithPrice {
+  tool: {
+    id: string;
+    name: string;
+  };
+  price: number;
 }
 
 interface ToolsBreakdownTableProps {
-  selectedTools: Tool[];
+  selectedTools: ToolWithPrice[];
   employeeCount: number;
   larkPricePerUser?: number;
 }
@@ -21,11 +22,11 @@ export function ToolsBreakdownTable({
   employeeCount, 
   larkPricePerUser = 1420 
 }: ToolsBreakdownTableProps) {
-  const calculateMonthlyCost = (tool: Tool) => {
-    return tool.customMonthlyFee || (tool.pricePerUser * employeeCount);
+  const calculateMonthlyCost = (toolWithPrice: ToolWithPrice) => {
+    return toolWithPrice.price * employeeCount;
   };
 
-  const totalCurrentCost = selectedTools.reduce((sum, tool) => sum + calculateMonthlyCost(tool), 0);
+  const totalCurrentCost = selectedTools.reduce((sum, toolWithPrice) => sum + calculateMonthlyCost(toolWithPrice), 0);
   const larkMonthlyCost = larkPricePerUser * employeeCount;
 
   return (
@@ -34,14 +35,14 @@ export function ToolsBreakdownTable({
       <Text style={styles.subtitle}>利用者数：{employeeCount}人</Text>
       
       <ScrollView style={styles.tableContainer} showsVerticalScrollIndicator={false}>
-        {selectedTools.map((tool, index) => {
-          const monthlyCost = calculateMonthlyCost(tool);
-          const userCost = Math.round(monthlyCost / employeeCount);
+        {selectedTools.map((toolWithPrice, index) => {
+          const monthlyCost = calculateMonthlyCost(toolWithPrice);
+          const userCost = Math.round(toolWithPrice.price);
           
           return (
-            <View key={tool.id} style={styles.tableRow}>
+            <View key={toolWithPrice.tool.id} style={styles.tableRow}>
               <View style={styles.toolNameContainer}>
-                <Text style={styles.toolName}>{tool.name}</Text>
+                <Text style={styles.toolName}>{toolWithPrice.tool.name}</Text>
               </View>
               <View style={styles.costContainer}>
                 <Text style={styles.userCost}>¥{userCost}/人</Text>

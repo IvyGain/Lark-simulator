@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '@/constants/colors';
 import { isDesktop, spacing } from '@/constants/responsive';
 import { LARK_PRICE_PER_USER } from '@/constants/tools';
@@ -20,6 +21,32 @@ export const VisualCostComparison: React.FC<VisualCostComparisonProps> = ({
   const annualSavings = monthlySavings * 12;
   const savingsPercentage = currentMonthlyCost > 0 ? (monthlySavings / currentMonthlyCost) * 100 : 0;
 
+  // Animation values
+  const currentBarHeight = useRef(new Animated.Value(0)).current;
+  const larkBarHeight = useRef(new Animated.Value(0)).current;
+  const savingsOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    // Animate bars
+    Animated.sequence([
+      Animated.timing(currentBarHeight, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: false,
+      }),
+      Animated.timing(larkBarHeight, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: false,
+      }),
+      Animated.timing(savingsOpacity, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('ja-JP', {
       style: 'currency',
@@ -28,91 +55,142 @@ export const VisualCostComparison: React.FC<VisualCostComparisonProps> = ({
     }).format(amount);
   };
 
-  // チャートの高さを計算（最大値を基準にスケール）
-  const maxCost = Math.max(currentMonthlyCost, larkMonthlyCost);
-  const currentHeight = maxCost > 0 ? (currentMonthlyCost / maxCost) * 200 : 0;
-  const larkHeight = maxCost > 0 ? (larkMonthlyCost / maxCost) * 200 : 0;
+  // Calculate bar heights for visualization
+  const maxBarHeight = isDesktop ? 200 : 160;
+  const currentHeight = maxBarHeight;
+  const larkHeight = currentMonthlyCost > 0 ? (larkMonthlyCost / currentMonthlyCost) * maxBarHeight : 0;
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>コスト比較</Text>
-      <Text style={styles.subtitle}>{employeeCount}人の利用者で計算</Text>
-
-      {/* バーチャート */}
-      <View style={styles.chartContainer}>
-        <View style={styles.chartArea}>
-          {/* 現在のツール */}
-          <View style={styles.barContainer}>
-            <View style={styles.barWrapper}>
-              <View 
-                style={[
-                  styles.bar, 
-                  styles.currentBar,
-                  { height: currentHeight }
-                ]} 
-              />
-            </View>
-            <Text style={styles.barLabel}>現在のツール</Text>
-            <Text style={styles.barAmount}>{formatCurrency(currentMonthlyCost)}</Text>
-            <Text style={styles.barPeriod}>(年間 {formatCurrency(currentMonthlyCost * 12)})</Text>
+      <Text style={styles.sectionTitle}>コスト比較分析</Text>
+      <Text style={styles.sectionSubtitle}>現在のツールコストとLark導入後の比較</Text>
+      
+      <View style={styles.comparisonContainer}>
+        {/* Current Tools Cost Bar */}
+        <View style={styles.barColumn}>
+          <View style={styles.barHeader}>
+            <Text style={styles.barTitle}>現在のツール</Text>
+            <Text style={styles.barSubtitle}>{selectedTools.length}個のツール</Text>
           </View>
-
-          {/* Lark */}
+          
           <View style={styles.barContainer}>
-            <View style={styles.barWrapper}>
-              <View 
-                style={[
-                  styles.bar, 
-                  styles.larkBar,
-                  { height: larkHeight }
-                ]} 
+            <Animated.View
+              style={[
+                styles.barWrapper,
+                {
+                  height: currentBarHeight.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0, currentHeight],
+                  }),
+                },
+              ]}
+            >
+              <LinearGradient
+                colors={['#FF6B6B', '#FF5252']}
+                style={styles.currentBar}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 0, y: 1 }}
               />
+            </Animated.View>
+            <View style={styles.barLabels}>
+              <Text style={styles.monthlyCost}>{formatCurrency(currentMonthlyCost)}</Text>
+              <Text style={styles.monthlyLabel}>月額</Text>
+              <Text style={styles.annualCost}>年間 {formatCurrency(currentMonthlyCost * 12)}</Text>
             </View>
-            <Text style={styles.barLabel}>Larkに統合</Text>
-            <Text style={styles.barAmount}>{formatCurrency(larkMonthlyCost)}</Text>
-            <Text style={styles.barPeriod}>(年間 {formatCurrency(larkMonthlyCost * 12)})</Text>
+          </View>
+        </View>
+
+        {/* VS Indicator */}
+        <View style={styles.vsContainer}>
+          <Text style={styles.vsText}>VS</Text>
+          <View style={styles.arrowContainer}>
+            <Text style={styles.arrow}>→</Text>
+          </View>
+        </View>
+
+        {/* Lark Cost Bar */}
+        <View style={styles.barColumn}>
+          <View style={styles.barHeader}>
+            <Text style={styles.barTitle}>Lark統合後</Text>
+            <Text style={styles.barSubtitle}>オールインワン</Text>
+          </View>
+          
+          <View style={styles.barContainer}>
+            <Animated.View
+              style={[
+                styles.barWrapper,
+                {
+                  height: larkBarHeight.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0, larkHeight],
+                  }),
+                },
+              ]}
+            >
+              <LinearGradient
+                colors={[Colors.primary, '#00A693']}
+                style={styles.larkBar}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 0, y: 1 }}
+              />
+            </Animated.View>
+            <View style={styles.barLabels}>
+              <Text style={styles.monthlyCost}>{formatCurrency(larkMonthlyCost)}</Text>
+              <Text style={styles.monthlyLabel}>月額</Text>
+              <Text style={styles.annualCost}>年間 {formatCurrency(larkMonthlyCost * 12)}</Text>
+            </View>
           </View>
         </View>
       </View>
 
-      {/* 削減効果の強調表示 */}
-      {monthlySavings > 0 && (
-        <View style={styles.savingsContainer}>
-          <View style={styles.savingsCard}>
-            <Text style={styles.savingsLabel}>年間削減額</Text>
-            <Text style={styles.savingsAmount}>{formatCurrency(annualSavings)}</Text>
-            <Text style={styles.savingsSubtext}>月間 {formatCurrency(monthlySavings)}</Text>
+      {/* Savings Highlight */}
+      <Animated.View style={[styles.savingsContainer, { opacity: savingsOpacity }]}>
+        <LinearGradient
+          colors={[Colors.success + '20', Colors.success + '30']}
+          style={styles.savingsCard}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+        >
+          <View style={styles.savingsContent}>
+            <View style={styles.savingsIcon}>
+              <Text style={styles.savingsIconText}>💡</Text>
+            </View>
+            <View style={styles.savingsDetails}>
+              <Text style={styles.savingsTitle}>削減効果</Text>
+              <View style={styles.savingsAmountContainer}>
+                <Text style={styles.savingsAmount}>{formatCurrency(monthlySavings)}</Text>
+                <Text style={styles.savingsUnit}>月間削減</Text>
+              </View>
+              <Text style={styles.savingsAnnual}>年間 {formatCurrency(annualSavings)} の削減</Text>
+            </View>
             <View style={styles.savingsPercentage}>
-              <Text style={styles.savingsPercentageText}>{Math.round(savingsPercentage)}%</Text>
-              <Text style={styles.savingsPercentageLabel}>削減</Text>
+              <Text style={styles.percentageValue}>{Math.round(savingsPercentage)}%</Text>
+              <Text style={styles.percentageLabel}>削減</Text>
             </View>
           </View>
-        </View>
-      )}
+        </LinearGradient>
+      </Animated.View>
 
-      {/* 現在のツール内訳 */}
-      <View style={styles.breakdownContainer}>
-        <Text style={styles.breakdownTitle}>現在のツール内訳</Text>
-        <Text style={styles.breakdownSubtitle}>利用者数: {employeeCount}人</Text>
-        
-        {selectedTools.map((tool, index) => (
-          <View key={index} style={styles.toolItem}>
-            <Text style={styles.toolName}>{tool.toolId}</Text>
-            <View style={styles.toolCost}>
-              <Text style={styles.toolPrice}>
-                {formatCurrency(tool.monthlyFee * employeeCount)}
-              </Text>
-              <Text style={styles.toolPriceUnit}>
-                ¥{tool.monthlyFee.toLocaleString()}/人
-              </Text>
-            </View>
+      {/* Key Benefits */}
+      <View style={styles.benefitsContainer}>
+        <Text style={styles.benefitsTitle}>Lark導入のメリット</Text>
+        <View style={styles.benefitsGrid}>
+          <View style={styles.benefitItem}>
+            <Text style={styles.benefitIcon}>🔄</Text>
+            <Text style={styles.benefitText}>ツール統合</Text>
           </View>
-        ))}
-
-        <View style={styles.larkPromotion}>
-          <Text style={styles.larkPromotionText}>
-            *Larkプラン: {LARK_PRICE_PER_USER.toLocaleString()}円/人/月で実現
-          </Text>
+          <View style={styles.benefitItem}>
+            <Text style={styles.benefitIcon}>💰</Text>
+            <Text style={styles.benefitText}>コスト削減</Text>
+          </View>
+          <View style={styles.benefitItem}>
+            <Text style={styles.benefitIcon}>⚡</Text>
+            <Text style={styles.benefitText}>効率向上</Text>
+          </View>
+          <View style={styles.benefitItem}>
+            <Text style={styles.benefitIcon}>🤝</Text>
+            <Text style={styles.benefitText}>連携強化</Text>
+          </View>
         </View>
       </View>
     </View>
@@ -123,177 +201,208 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.white,
     borderRadius: 16,
-    padding: isDesktop ? 32 : 24,
-    marginVertical: spacing.lg,
+    padding: spacing.xl,
+    marginBottom: spacing.lg,
     shadowColor: Colors.black,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.15,
     shadowRadius: 12,
-    elevation: 6,
+    elevation: 8,
   },
-  title: {
+  sectionTitle: {
     fontSize: isDesktop ? 28 : 24,
-    fontWeight: '800',
-    color: Colors.gray[900],
+    fontWeight: '900',
+    color: Colors.text,
     textAlign: 'center',
     marginBottom: spacing.xs,
   },
-  subtitle: {
+  sectionSubtitle: {
     fontSize: isDesktop ? 16 : 14,
     color: Colors.gray[600],
     textAlign: 'center',
     marginBottom: spacing.xl,
   },
-  chartContainer: {
-    alignItems: 'center',
-    marginBottom: spacing.xl,
-  },
-  chartArea: {
+  comparisonContainer: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    justifyContent: 'center',
-    gap: isDesktop ? 60 : 40,
-    height: 280,
+    justifyContent: 'space-between',
+    marginBottom: spacing.xl,
+    minHeight: isDesktop ? 280 : 240,
+  },
+  barColumn: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  barHeader: {
+    alignItems: 'center',
+    marginBottom: spacing.lg,
+  },
+  barTitle: {
+    fontSize: isDesktop ? 18 : 16,
+    fontWeight: 'bold',
+    color: Colors.text,
+    marginBottom: spacing.xs,
+  },
+  barSubtitle: {
+    fontSize: isDesktop ? 14 : 12,
+    color: Colors.gray[600],
   },
   barContainer: {
     alignItems: 'center',
-    width: isDesktop ? 120 : 100,
+    width: '100%',
   },
   barWrapper: {
-    height: 200,
-    justifyContent: 'flex-end',
-    marginBottom: spacing.md,
-  },
-  bar: {
     width: isDesktop ? 80 : 60,
-    borderRadius: isDesktop ? 12 : 8,
-    minHeight: 20,
+    borderRadius: 8,
+    overflow: 'hidden',
+    marginBottom: spacing.md,
+    shadowColor: Colors.black,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 6,
   },
   currentBar: {
-    backgroundColor: Colors.gray[700] as string,
+    flex: 1,
+    width: '100%',
   },
   larkBar: {
-    backgroundColor: Colors.primary,
+    flex: 1,
+    width: '100%',
   },
-  barLabel: {
-    fontSize: isDesktop ? 16 : 14,
-    fontWeight: '600',
-    color: Colors.gray[700],
-    textAlign: 'center',
+  barLabels: {
+    alignItems: 'center',
+  },
+  monthlyCost: {
+    fontSize: isDesktop ? 20 : 18,
+    fontWeight: 'bold',
+    color: Colors.text,
     marginBottom: spacing.xs,
   },
-  barAmount: {
-    fontSize: isDesktop ? 20 : 18,
-    fontWeight: '700',
-    color: Colors.gray[900],
-    textAlign: 'center',
+  monthlyLabel: {
+    fontSize: isDesktop ? 12 : 10,
+    color: Colors.gray[600],
+    marginBottom: spacing.xs,
   },
-  barPeriod: {
-    fontSize: isDesktop ? 12 : 11,
-    color: Colors.gray[500],
-    textAlign: 'center',
-    marginTop: 2,
+  annualCost: {
+    fontSize: isDesktop ? 14 : 12,
+    color: Colors.gray[700],
+    fontWeight: '500',
+  },
+  vsContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: spacing.md,
+    marginBottom: spacing.xl,
+  },
+  vsText: {
+    fontSize: isDesktop ? 20 : 18,
+    fontWeight: 'bold',
+    color: Colors.primary,
+    marginBottom: spacing.sm,
+  },
+  arrowContainer: {
+    backgroundColor: Colors.primary + '20',
+    borderRadius: 20,
+    padding: spacing.sm,
+  },
+  arrow: {
+    fontSize: isDesktop ? 24 : 20,
+    color: Colors.primary,
   },
   savingsContainer: {
-    alignItems: 'center',
     marginBottom: spacing.xl,
   },
   savingsCard: {
-    backgroundColor: Colors.success + '10',
     borderRadius: 16,
     padding: spacing.lg,
-    alignItems: 'center',
     borderWidth: 2,
     borderColor: Colors.success + '30',
-    minWidth: isDesktop ? 300 : 280,
   },
-  savingsLabel: {
+  savingsContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  savingsIcon: {
+    marginRight: spacing.md,
+  },
+  savingsIconText: {
+    fontSize: isDesktop ? 40 : 32,
+  },
+  savingsDetails: {
+    flex: 1,
+  },
+  savingsTitle: {
     fontSize: isDesktop ? 16 : 14,
-    color: Colors.success,
     fontWeight: '600',
+    color: Colors.success,
+    marginBottom: spacing.xs,
+  },
+  savingsAmountContainer: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
     marginBottom: spacing.xs,
   },
   savingsAmount: {
-    fontSize: isDesktop ? 32 : 28,
-    fontWeight: '800',
+    fontSize: isDesktop ? 24 : 20,
+    fontWeight: 'bold',
     color: Colors.success,
-    marginBottom: spacing.xs,
+    marginRight: spacing.xs,
   },
-  savingsSubtext: {
+  savingsUnit: {
     fontSize: isDesktop ? 14 : 12,
-    color: Colors.gray[600],
-    marginBottom: spacing.sm,
+    color: Colors.success,
+    fontWeight: '500',
+  },
+  savingsAnnual: {
+    fontSize: isDesktop ? 14 : 12,
+    color: Colors.gray[700],
   },
   savingsPercentage: {
-    backgroundColor: Colors.success,
-    borderRadius: 8,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs,
     alignItems: 'center',
+    backgroundColor: Colors.success,
+    borderRadius: 12,
+    padding: spacing.md,
+    minWidth: isDesktop ? 80 : 70,
   },
-  savingsPercentageText: {
+  percentageValue: {
     fontSize: isDesktop ? 24 : 20,
-    fontWeight: '800',
+    fontWeight: 'bold',
     color: Colors.white,
   },
-  savingsPercentageLabel: {
+  percentageLabel: {
     fontSize: isDesktop ? 12 : 10,
     color: Colors.white,
     fontWeight: '600',
   },
-  breakdownContainer: {
-    backgroundColor: Colors.gray[50] as string,
-    borderRadius: 12,
-    padding: spacing.lg,
+  benefitsContainer: {
+    marginTop: spacing.lg,
   },
-  breakdownTitle: {
+  benefitsTitle: {
     fontSize: isDesktop ? 18 : 16,
-    fontWeight: '700',
-    color: Colors.gray[900],
-    marginBottom: spacing.xs,
-  },
-  breakdownSubtitle: {
-    fontSize: isDesktop ? 14 : 12,
-    color: Colors.gray[600],
+    fontWeight: 'bold',
+    color: Colors.text,
+    textAlign: 'center',
     marginBottom: spacing.md,
   },
-  toolItem: {
+  benefitsGrid: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
+    flexWrap: 'wrap',
+  },
+  benefitItem: {
     alignItems: 'center',
-    paddingVertical: spacing.sm,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.gray[200],
+    marginHorizontal: spacing.sm,
+    marginVertical: spacing.xs,
   },
-  toolName: {
-    fontSize: isDesktop ? 16 : 14,
-    fontWeight: '500',
-    color: Colors.gray[800],
-    flex: 1,
+  benefitIcon: {
+    fontSize: isDesktop ? 28 : 24,
+    marginBottom: spacing.xs,
   },
-  toolCost: {
-    alignItems: 'flex-end',
-  },
-  toolPrice: {
-    fontSize: isDesktop ? 16 : 14,
-    fontWeight: '600',
-    color: Colors.gray[900],
-  },
-  toolPriceUnit: {
-    fontSize: isDesktop ? 12 : 11,
-    color: Colors.gray[500],
-  },
-  larkPromotion: {
-    marginTop: spacing.md,
-    paddingTop: spacing.md,
-    borderTopWidth: 1,
-    borderTopColor: Colors.primary + '30',
-    alignItems: 'center',
-  },
-  larkPromotionText: {
+  benefitText: {
     fontSize: isDesktop ? 14 : 12,
-    color: Colors.primary,
     fontWeight: '600',
+    color: Colors.text,
     textAlign: 'center',
   },
 });

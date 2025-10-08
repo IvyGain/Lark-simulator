@@ -1,14 +1,20 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import ToolCheckbox from "./ToolCheckbox";
+import ToolCheckboxWithPlans from "./ToolCheckboxWithPlans";
 import { Tool } from "@/constants/tools";
 import Colors from "@/constants/colors";
+
+interface SelectedToolPlan {
+  toolId: string;
+  planIndex: number;
+}
 
 interface CategorySectionProps {
   category: string;
   tools: Tool[];
-  selectedTools: string[];
-  onToggleTool: (id: string) => void;
+  selectedTools: SelectedToolPlan[];
+  onToggleTool: (id: string, planIndex?: number) => void;
+  onPlanChange?: (toolId: string, planIndex: number) => void;
 }
 
 export default function CategorySection({
@@ -16,20 +22,29 @@ export default function CategorySection({
   tools,
   selectedTools,
   onToggleTool,
+  onPlanChange,
 }: CategorySectionProps) {
+  const getSelectedPlanIndex = (toolId: string): number | undefined => {
+    const selectedTool = selectedTools.find(st => st.toolId === toolId);
+    return selectedTool?.planIndex;
+  };
+
+  const isToolSelected = (toolId: string): boolean => {
+    return selectedTools.some(st => st.toolId === toolId);
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.categoryTitle}>{category}</Text>
       <View style={styles.toolsGrid}>
         {tools.map((tool) => (
           <View key={tool.id} style={styles.toolWrapper}>
-            <ToolCheckbox
-              id={tool.id}
-              name={tool.name}
-              icon={tool.icon}
-              price={tool.pricePerUser}
-              isSelected={selectedTools.includes(tool.id)}
+            <ToolCheckboxWithPlans
+              tool={tool}
+              isSelected={isToolSelected(tool.id)}
+              selectedPlanIndex={getSelectedPlanIndex(tool.id)}
               onToggle={onToggleTool}
+              onPlanChange={onPlanChange}
             />
           </View>
         ))}
