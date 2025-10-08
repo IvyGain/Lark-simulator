@@ -237,133 +237,142 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.gray[50],
   },
   content: {
-    padding: 20,
-    paddingBottom: 40,
+    padding: 24, // Increased from 20
+    paddingBottom: 60, // Increased from 40
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 32,
-    paddingTop: 8,
+    marginBottom: 40, // Increased from 32
+    paddingTop: 12, // Increased from 8
   },
   backButton: {
-    padding: 12,
-    borderRadius: 8,
+    padding: 16, // Increased from 12
+    borderRadius: 12, // Increased from 8
     backgroundColor: Colors.white,
     shadowColor: Colors.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    shadowOffset: { width: 0, height: 4 }, // Enhanced shadow
+    shadowOpacity: 0.15, // Increased from 0.1
+    shadowRadius: 8, // Increased from 4
+    elevation: 4, // Increased from 2
   },
   backButtonText: {
     color: Colors.gray[700],
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 18, // Increased from 16
+    fontWeight: '700', // Increased from '600'
   },
   badges: {
     flexDirection: 'row',
-    gap: 12,
+    gap: 16, // Increased from 12
   },
   badge: {
     backgroundColor: Colors.primary,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
+    paddingHorizontal: 20, // Increased from 16
+    paddingVertical: 12, // Increased from 8
+    borderRadius: 24, // Increased from 20
     shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 4 }, // Enhanced shadow
+    shadowOpacity: 0.3, // Increased from 0.2
+    shadowRadius: 8, // Increased from 4
+    elevation: 6, // Increased from 3
   },
   badgeText: {
-    fontSize: 14,
-    fontWeight: '700',
+    fontSize: 16, // Increased from 14
+    fontWeight: '800', // Increased from '700'
     color: Colors.white,
   },
   summarySection: {
-    marginBottom: 32,
+    marginBottom: 48, // Increased from 32 - This is the most important section
+    transform: [{ scale: 1.05 }], // Slightly larger scale for emphasis
   },
   visualSection: {
-    marginBottom: 32,
+    marginBottom: 40, // Increased from 32
+    transform: [{ scale: 1.02 }], // Slightly larger for visual impact
   },
   breakdownSection: {
-    marginBottom: 32,
+    marginBottom: 40, // Increased from 32
   },
   ctaSection: {
-    borderRadius: 24,
-    padding: 4,
-    marginTop: 32,
+    borderRadius: 28, // Increased from 24
+    padding: 6, // Increased from 4
+    marginTop: 48, // Increased from 32
     shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.25,
-    shadowRadius: 20,
-    elevation: 12,
+    shadowOffset: { width: 0, height: 16 }, // Enhanced shadow
+    shadowOpacity: 0.35, // Increased from 0.25
+    shadowRadius: 28, // Increased from 20
+    elevation: 16, // Increased from 12
+    transform: [{ scale: 1.03 }], // Slightly larger for prominence
   },
   ctaContent: {
     backgroundColor: Colors.white,
-    borderRadius: 20,
-    padding: 32,
+    borderRadius: 24, // Increased from 20
+    padding: 40, // Increased from 32
     alignItems: 'center',
   },
   ctaTitle: {
-    fontSize: 28,
-    fontWeight: '800',
+    fontSize: 32, // Increased from 28 - Make this much more prominent
+    fontWeight: '900', // Increased from '800'
     color: Colors.text,
     textAlign: 'center',
-    marginBottom: 16,
-    lineHeight: 36,
+    marginBottom: 20, // Increased from 16
+    lineHeight: 40, // Increased from 36
   },
   ctaSubtitle: {
-    fontSize: 18,
+    fontSize: 20, // Increased from 18
     color: Colors.gray[600],
     textAlign: 'center',
-    marginBottom: 32,
-    lineHeight: 24,
-    fontWeight: '500',
+    marginBottom: 40, // Increased from 32
+    lineHeight: 28, // Increased from 24
+    fontWeight: '600', // Increased from '500'
   },
   ctaButtons: {
     width: '100%',
-    gap: 16,
+    gap: 20, // Increased from 16
   },
   primaryButton: {
-    borderRadius: 16,
+    borderRadius: 20, // Increased from 16
     shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
-    elevation: 8,
+    shadowOffset: { width: 0, height: 8 }, // Enhanced shadow
+    shadowOpacity: 0.5, // Increased from 0.4
+    shadowRadius: 16, // Increased from 12
+    elevation: 12, // Increased from 8
+    transform: [{ scale: 1.02 }], // Slightly larger for emphasis
   },
   primaryButtonInner: {
-    paddingVertical: 20,
-    paddingHorizontal: 32,
+    paddingVertical: 24, // Increased from 20
+    paddingHorizontal: 40, // Increased from 32
     alignItems: 'center',
-    borderRadius: 16,
+    borderRadius: 20, // Increased from 16
   },
   primaryButtonText: {
     color: Colors.white,
-    fontSize: 20,
-    fontWeight: '700',
+    fontSize: 22, // Increased from 20
+    fontWeight: '800', // Increased from '700'
   },
   secondaryButton: {
-    borderWidth: 2,
+    borderWidth: 3, // Increased from 2
     borderColor: Colors.primary,
-    paddingVertical: 18,
-    paddingHorizontal: 32,
-    borderRadius: 16,
+    paddingVertical: 22, // Increased from 18
+    paddingHorizontal: 40, // Increased from 32
+    borderRadius: 20, // Increased from 16
     alignItems: 'center',
     backgroundColor: Colors.white,
+    shadowColor: Colors.gray[300],
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 4,
   },
   secondaryButtonText: {
     color: Colors.primary,
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 20, // Increased from 18
+    fontWeight: '700', // Increased from '600'
   },
   errorText: {
-    fontSize: 18,
+    fontSize: 20, // Increased from 18
     color: Colors.gray[600],
     textAlign: 'center',
-    marginBottom: 24,
+    marginBottom: 32, // Increased from 24
   },
 });

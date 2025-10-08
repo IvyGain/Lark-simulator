@@ -89,115 +89,132 @@ export function ResultsSummary({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: spacing.xl,
+    marginBottom: spacing.xxl, // Increased spacing
+    transform: [{ scale: 1.02 }], // Slightly larger overall
   },
   heroCard: {
-    borderRadius: 20,
-    padding: spacing.xl,
-    marginBottom: spacing.lg,
+    borderRadius: 24, // Increased from 20
+    padding: spacing.xxl + 8, // Increased padding significantly
+    marginBottom: spacing.xl, // Increased from lg
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     shadowColor: Colors.success,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
-    shadowRadius: 16,
-    elevation: 12,
-    minHeight: isDesktop ? 160 : 140,
+    shadowOffset: { width: 0, height: 12 }, // Enhanced shadow
+    shadowOpacity: 0.4, // Increased from 0.3
+    shadowRadius: 24, // Increased from 16
+    elevation: 16, // Increased from 12
+    minHeight: isDesktop ? 200 : 180, // Increased from 160/140
   },
   heroContent: {
     flex: 1,
   },
   heroLabel: {
-    fontSize: isDesktop ? 20 : 18,
-    fontWeight: '600',
+    fontSize: isDesktop ? 24 : 22, // Increased from 20/18
+    fontWeight: '700', // Increased from '600'
     color: Colors.white,
-    marginBottom: spacing.sm,
-    opacity: 0.9,
+    marginBottom: spacing.md, // Increased from sm
+    opacity: 0.95, // Slightly more opaque
   },
   heroAmount: {
-    fontSize: isDesktop ? 42 : 36,
+    fontSize: isDesktop ? 52 : 46, // Significantly increased from 42/36
     fontWeight: '900',
     color: Colors.white,
-    marginBottom: spacing.md,
-    letterSpacing: -1,
+    marginBottom: spacing.lg, // Increased from md
+    letterSpacing: -1.5, // Slightly more negative spacing
+    textShadowColor: 'rgba(0,0,0,0.3)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
   },
   heroPercentageContainer: {
     flexDirection: 'row',
     alignItems: 'baseline',
   },
   heroPercentage: {
-    fontSize: isDesktop ? 32 : 28,
-    fontWeight: 'bold',
+    fontSize: isDesktop ? 38 : 34, // Increased from 32/28
+    fontWeight: '900', // Increased from 'bold'
     color: Colors.white,
-    marginRight: spacing.xs,
+    marginRight: spacing.sm, // Increased from xs
+    textShadowColor: 'rgba(0,0,0,0.3)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
   },
   heroPercentageLabel: {
-    fontSize: isDesktop ? 18 : 16,
-    fontWeight: '600',
+    fontSize: isDesktop ? 22 : 20, // Increased from 18/16
+    fontWeight: '700', // Increased from '600'
     color: Colors.white,
-    opacity: 0.9,
+    opacity: 0.95, // Slightly more opaque
   },
   heroIcon: {
-    marginLeft: spacing.lg,
+    marginLeft: spacing.xl, // Increased from lg
   },
   heroIconText: {
-    fontSize: isDesktop ? 64 : 56,
+    fontSize: isDesktop ? 80 : 72, // Significantly increased from 64/56
+    textShadowColor: 'rgba(0,0,0,0.2)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
   },
   metricsGrid: {
     flexDirection: 'row',
-    gap: spacing.md,
-    marginBottom: spacing.lg,
+    gap: spacing.lg, // Increased from md
+    marginBottom: spacing.xl, // Increased from lg
   },
   metricCard: {
     flex: 1,
-    borderRadius: 16,
+    borderRadius: 20, // Increased from 16
     overflow: 'hidden',
     shadowColor: Colors.black,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 6,
+    shadowOffset: { width: 0, height: 6 }, // Enhanced shadow
+    shadowOpacity: 0.15, // Increased from 0.1
+    shadowRadius: 12, // Increased from 8
+    elevation: 8, // Increased from 6
+    transform: [{ scale: 1.01 }], // Slightly larger
   },
   metricGradient: {
-    padding: spacing.lg,
+    padding: spacing.xl, // Increased from lg
     alignItems: 'center',
-    minHeight: isDesktop ? 120 : 100,
+    minHeight: isDesktop ? 140 : 120, // Increased from 120/100
     justifyContent: 'center',
   },
   metricIcon: {
-    fontSize: isDesktop ? 32 : 28,
-    marginBottom: spacing.sm,
+    fontSize: isDesktop ? 40 : 36, // Increased from 32/28
+    marginBottom: spacing.md, // Increased from sm
   },
   metricLabel: {
-    fontSize: isDesktop ? 16 : 14,
-    fontWeight: '600',
+    fontSize: isDesktop ? 18 : 16, // Increased from 16/14
+    fontWeight: '700', // Increased from '600'
     color: Colors.text,
     textAlign: 'center',
-    marginBottom: spacing.xs,
+    marginBottom: spacing.sm, // Increased from xs
   },
   metricValue: {
-    fontSize: isDesktop ? 28 : 24,
-    fontWeight: 'bold',
+    fontSize: isDesktop ? 32 : 28, // Increased from 28/24
+    fontWeight: '900', // Increased from 'bold'
     color: Colors.text,
     textAlign: 'center',
   },
   impactStatement: {
     backgroundColor: Colors.gray[50],
-    borderRadius: 12,
-    padding: spacing.lg,
-    borderLeftWidth: 4,
+    borderRadius: 16, // Increased from 12
+    padding: spacing.xl, // Increased from lg
+    borderLeftWidth: 6, // Increased from 4
     borderLeftColor: Colors.success,
+    shadowColor: Colors.gray[300],
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
   },
   impactText: {
-    fontSize: isDesktop ? 18 : 16,
-    fontWeight: '500',
+    fontSize: isDesktop ? 20 : 18, // Increased from 18/16
+    fontWeight: '600', // Increased from '500'
     color: Colors.text,
     textAlign: 'center',
-    lineHeight: isDesktop ? 28 : 24,
+    lineHeight: isDesktop ? 32 : 28, // Increased from 28/24
   },
   impactHighlight: {
-    fontWeight: 'bold',
+    fontWeight: '900', // Increased from 'bold'
     color: Colors.success,
+    fontSize: isDesktop ? 22 : 20, // Slightly larger than base text
   },
 });
