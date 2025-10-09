@@ -4,7 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 import { tools, toolsByCategory, categoryTranslations } from "@/constants/tools";
 import { useUnifiedStore } from "@/store/unified-store";
-import CategorySection from "@/components/CategorySection";
+import { CategorySection } from "@/components/CategorySection";
 import UserCountSlider from "@/components/UserCountSlider";
 import Button from "@/components/Button";
 import Header from "@/components/Header";
@@ -203,10 +203,14 @@ export default function UnifiedSimulatorScreen() {
         {showResults && calculationResults && (
           <>
             <ResultsSummary
-              annualSavings={calculationResults.annualSavings || 0}
-              savingsPercentage={calculationResults.savingsPercentage || 0}
-              roi={calculationResults.roi || 0}
-              paybackPeriod={calculationResults.paybackPeriod || 0}
+              metrics={{
+                annualCostReduction: calculationResults.annualSavings || 0,
+                reductionRate: calculationResults.savingsPercentage || 0,
+                roi: calculationResults.roi || 0,
+                paybackPeriod: calculationResults.paybackPeriod || 0
+              }}
+              companyName={companyName}
+              employeeCount={employeeCount}
             />
             
             <CompanyInfoBox

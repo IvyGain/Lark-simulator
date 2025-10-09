@@ -4,7 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 import { tools, toolsByCategory, categoryTranslations } from "@/constants/tools";
 import { useUnifiedStore } from "@/store/unified-store";
-import CategorySection from "@/components/CategorySection";
+import { CategorySection } from "@/components/CategorySection";
 import UserCountSlider from "@/components/UserCountSlider";
 import Button from "@/components/Button";
 import Header from "@/components/Header";
@@ -193,7 +193,7 @@ export default function ToolSelectionScreen() {
               {categories.map((category) => (
                 <CategorySection
                   key={category}
-                  category={categoryTranslations[category] || category}
+                  title={categoryTranslations[category] || category}
                   tools={toolsByCategory[category]}
                   selectedTools={selectedTools}
                   onToggleTool={toggleTool}
