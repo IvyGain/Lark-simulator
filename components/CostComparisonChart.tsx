@@ -3,16 +3,15 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '../constants/colors';
 import { spacing, isDesktop } from '../constants/responsive';
+import { tools } from '@/constants/tools';
 
-interface Tool {
-  id: string;
-  name: string;
-  pricePerUser: number;
-  customMonthlyFee?: number;
+interface SelectedToolPlan {
+  toolId: string;
+  planIndex: number;
 }
 
 interface CostComparisonChartProps {
-  selectedTools: Tool[];
+  selectedTools: SelectedToolPlan[];
   employeeCount: number;
   larkCost: number;
   savingsAmount: number;
@@ -26,17 +25,10 @@ export function CostComparisonChart({
   savingsAmount,
   savingsPercentage
 }: CostComparisonChartProps) {
-  
-  // Calculate actual current tools cost (ANNUAL)
-  const calculateMonthlyCost = (tool: Tool) => {
-    return tool.customMonthlyFee || (tool.pricePerUser * employeeCount);
-  };
-
-  const totalCurrentMonthlyCost = selectedTools.reduce((total, tool) => {
-    return total + calculateMonthlyCost(tool);
-  }, 0);
-
   const formatCurrency = (amount: number) => {
+    if (isNaN(amount) || amount === null || amount === undefined) {
+      return '¥0';
+    }
     return new Intl.NumberFormat('ja-JP', {
       style: 'currency',
       currency: 'JPY',
@@ -44,21 +36,29 @@ export function CostComparisonChart({
     }).format(amount);
   };
 
+  // Calculate total current monthly cost
+  const totalCurrentMonthlyCost = selectedTools.reduce((total, selectedTool) => {
+    const tool = tools.find(t => t.id === selectedTool.toolId);
+    if (tool && tool.pricingPlans && tool.pricingPlans[selectedTool.planIndex]) {
+      const plan = tool.pricingPlans[selectedTool.planIndex];
+      return total + (plan.pricePerUser * employeeCount);
+    }
+    return total;
+  }, 0);
+
   return (
     <View style={styles.container}>
       {/* Header Section */}
       <View style={styles.headerSection}>
-        <Text style={styles.mainTitle}>詳細コスト分析</Text>
-        <Text style={styles.subtitle}>従業員{employeeCount}名での年間コスト比較</Text>
+        <Text style={styles.mainTitle}>コスト比較分析</Text>
+        <Text style={styles.subtitle}>現在のツールコストとLark導入後の詳細比較</Text>
       </View>
 
-      {/* Summary Cards */}
+      {/* Summary Section */}
       <View style={styles.summaryContainer}>
         <LinearGradient
-          colors={[Colors.success, '#2E8B57']}
+          colors={[Colors.success, Colors.success + 'DD']}
           style={styles.savingsCard}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
         >
           <View style={styles.savingsContent}>
             <Text style={styles.savingsIcon}>💰</Text>
@@ -67,7 +67,7 @@ export function CostComparisonChart({
               <Text style={styles.savingsAmount}>{formatCurrency(savingsAmount)}</Text>
             </View>
             <View style={styles.savingsPercentageContainer}>
-              <Text style={styles.savingsPercentage}>{Math.round(savingsPercentage)}%</Text>
+              <Text style={styles.savingsPercentage}>{savingsPercentage.toFixed(1)}%</Text>
               <Text style={styles.savingsPercentageLabel}>削減</Text>
             </View>
           </View>
@@ -84,19 +84,25 @@ export function CostComparisonChart({
           </View>
 
           <View style={styles.toolsListContainer}>
-            {selectedTools.map((tool, index) => {
-              const monthlyCost = calculateMonthlyCost(tool);
-              const annualCost = monthlyCost * 12;
-              const userCost = Math.round(monthlyCost / employeeCount);
+            {selectedTools.map((selectedTool) => {
+              const tool = tools.find(t => t.id === selectedTool.toolId);
+              if (!tool || !tool.pricingPlans || !tool.pricingPlans[selectedTool.planIndex]) {
+                return null;
+              }
+              
+              const plan = tool.pricingPlans[selectedTool.planIndex];
+              const toolTotalCost = plan.pricePerUser * employeeCount;
               
               return (
-                <View key={tool.id} style={styles.toolRow}>
+                <View key={`${tool.id}-${selectedTool.planIndex}`} style={styles.toolRow}>
                   <View style={styles.toolInfo}>
                     <Text style={styles.toolName}>{tool.name}</Text>
-                    <Text style={styles.toolUserCost}>¥{userCost.toLocaleString()}/人/月</Text>
+                    <Text style={styles.toolUserCost}>
+                      {formatCurrency(plan.pricePerUser)}/人/月 × {employeeCount}人
+                    </Text>
                   </View>
                   <View style={styles.toolCostInfo}>
-                    <Text style={styles.toolTotalCost}>{formatCurrency(monthlyCost)}</Text>
+                    <Text style={styles.toolTotalCost}>{formatCurrency(toolTotalCost)}</Text>
                     <Text style={styles.toolMonthlyCost}>月額</Text>
                   </View>
                 </View>
@@ -136,37 +142,35 @@ export function CostComparisonChart({
               <Text style={styles.larkFeaturesTitle}>統合される機能</Text>
               
               <View style={styles.larkIconsRow}>
-                <View style={styles.larkIconGroup}>
-                  <Text style={styles.larkFeatureIcon}>💬</Text>
-                  <Text style={styles.larkFeatureLabel}>チャット</Text>
-                </View>
-                <Text style={styles.larkPlusIcon}>+</Text>
-                <View style={styles.larkIconGroup}>
-                  <Text style={styles.larkFeatureIcon}>📄</Text>
-                  <Text style={styles.larkFeatureLabel}>ドキュメント</Text>
-                </View>
-                <Text style={styles.larkPlusIcon}>+</Text>
-                <View style={styles.larkIconGroup}>
-                  <Text style={styles.larkFeatureIcon}>📹</Text>
-                  <Text style={styles.larkFeatureLabel}>ビデオ会議</Text>
-                </View>
+                {[
+                  { icon: '💬', label: 'チャット' },
+                  { icon: '📄', label: 'ドキュメント' },
+                  { icon: '📹', label: 'ビデオ会議' }
+                ].map((feature, index) => (
+                  <React.Fragment key={`feature-row1-${index}`}>
+                    <View style={styles.larkIconGroup}>
+                      <Text style={styles.larkFeatureIcon}>{feature.icon}</Text>
+                      <Text style={styles.larkFeatureLabel}>{feature.label}</Text>
+                    </View>
+                    {index < 2 && <Text style={styles.larkPlusIcon}>+</Text>}
+                  </React.Fragment>
+                ))}
               </View>
 
               <View style={styles.larkIconsRow}>
-                <View style={styles.larkIconGroup}>
-                  <Text style={styles.larkFeatureIcon}>🤖</Text>
-                  <Text style={styles.larkFeatureLabel}>AI議事録</Text>
-                </View>
-                <Text style={styles.larkPlusIcon}>+</Text>
-                <View style={styles.larkIconGroup}>
-                  <Text style={styles.larkFeatureIcon}>📅</Text>
-                  <Text style={styles.larkFeatureLabel}>カレンダー</Text>
-                </View>
-                <Text style={styles.larkPlusIcon}>+</Text>
-                <View style={styles.larkIconGroup}>
-                  <Text style={styles.larkFeatureIcon}>📧</Text>
-                  <Text style={styles.larkFeatureLabel}>メール</Text>
-                </View>
+                {[
+                  { icon: '🤖', label: 'AI議事録' },
+                  { icon: '📅', label: 'カレンダー' },
+                  { icon: '📧', label: 'メール' }
+                ].map((feature, index) => (
+                  <React.Fragment key={`feature-row2-${index}`}>
+                    <View style={styles.larkIconGroup}>
+                      <Text style={styles.larkFeatureIcon}>{feature.icon}</Text>
+                      <Text style={styles.larkFeatureLabel}>{feature.label}</Text>
+                    </View>
+                    {index < 2 && <Text style={styles.larkPlusIcon}>+</Text>}
+                  </React.Fragment>
+                ))}
               </View>
 
               <View style={styles.larkEqualsContainer}>
