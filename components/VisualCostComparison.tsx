@@ -49,7 +49,8 @@ export const VisualCostComparison: React.FC<VisualCostComparisonProps> = ({
     return new Intl.NumberFormat('ja-JP', {
       style: 'currency',
       currency: 'JPY',
-      maximumFractionDigits: 0,
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1,
     }).format(amount);
   };
 

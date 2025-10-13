@@ -17,16 +17,20 @@ export const AdvancedCostComparison: React.FC<AdvancedCostComparisonProps> = ({
     return new Intl.NumberFormat('ja-JP', {
       style: 'currency',
       currency: 'JPY',
-      maximumFractionDigits: 0,
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1,
     }).format(amount);
   };
 
   const formatPercentage = (percentage: number) => {
-    return `${Math.round(percentage)}%`;
+    return `${percentage.toFixed(1)}%`;
   };
 
   const formatNumber = (num: number) => {
-    return new Intl.NumberFormat('ja-JP').format(Math.round(num));
+    return new Intl.NumberFormat('ja-JP', {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1,
+    }).format(num);
   };
 
   return (

@@ -26,7 +26,8 @@ export function ResultsSummary({
     return new Intl.NumberFormat('ja-JP', {
       style: 'currency',
       currency: 'JPY',
-      maximumFractionDigits: 0,
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1,
     }).format(amount);
   };
 
@@ -152,6 +153,24 @@ const styles = StyleSheet.create({
     fontSize: 32,
     marginBottom: spacing.sm,
     textAlign: 'center',
+  },
+  heroContent: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  heroPercentageContainer: {
+    alignItems: 'center',
+    marginTop: spacing.sm,
+  },
+  heroPercentageLabel: {
+    fontSize: 14,
+    color: 'rgba(255, 255, 255, 0.8)',
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  heroIcon: {
+    alignItems: 'center',
+    marginTop: spacing.sm,
   },
   metricsGrid: {
     flexDirection: 'row',
