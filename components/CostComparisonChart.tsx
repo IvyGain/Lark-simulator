@@ -27,13 +27,13 @@ export function CostComparisonChart({
 }: CostComparisonChartProps) {
   const formatCurrency = (amount: number) => {
     if (isNaN(amount) || amount === null || amount === undefined) {
-      return '¥0.0';
+      return '¥0';
     }
     return new Intl.NumberFormat('ja-JP', {
       style: 'currency',
       currency: 'JPY',
-      minimumFractionDigits: 1,
-      maximumFractionDigits: 1,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
     }).format(amount);
   };
 

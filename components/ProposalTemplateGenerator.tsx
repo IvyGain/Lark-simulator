@@ -27,8 +27,8 @@ export const ProposalTemplateGenerator: React.FC<ProposalTemplateGeneratorProps>
     return new Intl.NumberFormat('ja-JP', {
       style: 'currency',
       currency: 'JPY',
-      minimumFractionDigits: 1,
-      maximumFractionDigits: 1,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
     }).format(amount);
   };
 
@@ -71,8 +71,8 @@ ${selectedTools.map(tool => `・ツール: ${tool.toolId} - 月額: ${formatCurr
 【業務効率化効果】
 ・年間工数削減: ${Math.round(result.laborHoursSaved)}時間
 ・人件費換算削減額: ${formatCurrency(result.laborCostSaved)}
-・ROI（投資収益率）: ${Math.round(result.roi)}%
-・投資回収期間: ${Math.round(result.paybackPeriod)}ヶ月
+・ROI（投資収益率）: ${result.roi.toFixed(1)}%
+・投資回収期間: ${result.paybackPeriod.toFixed(1)}ヶ月
 
 ■ ユースケース提案
 ${result.useCases.map((useCase, index) => `
@@ -89,7 +89,7 @@ ${index + 1}. ${useCase.challenge}の解決
 
 ■ まとめ
 Lark導入により、年間${formatCurrency(result.annualSavings)}のコスト削減と${Math.round(result.laborHoursSaved)}時間の工数削減が期待できます。
-投資回収期間は${Math.round(result.paybackPeriod)}ヶ月と短期間での効果実現が可能です。
+投資回収期間は${result.paybackPeriod.toFixed(1)}ヶ月と短期間での効果実現が可能です。
 
 以上の分析結果から、Lark導入は貴社の業務効率化とコスト最適化に大きく貢献するものと考えられます。
 

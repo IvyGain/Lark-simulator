@@ -48,7 +48,7 @@ export function ToolCheckboxWithPlans({
         <View style={[styles.iconContainer, isSelected && styles.iconContainerSelected]}>
           <FontAwesome
             name={tool.icon as any}
-            size={14}
+            size={20}
             color={isSelected ? Colors.white : Colors.primary}
           />
         </View>
@@ -80,7 +80,7 @@ export function ToolCheckboxWithPlans({
         
         <View style={[styles.checkbox, isSelected && styles.checkboxSelected]}>
           {isSelected && (
-            <FontAwesome name="check" size={8} color={Colors.white} />
+            <FontAwesome name="check" size={12} color={Colors.white} />
           )}
         </View>
       </Pressable>
@@ -148,45 +148,45 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 8,
+    padding: 16,
     backgroundColor: Colors.white,
-    borderRadius: 6,
-    marginBottom: 2,
-    marginHorizontal: 1,
+    borderRadius: 12,
+    marginBottom: 8,
+    marginHorizontal: 2,
     borderWidth: 1,
     borderColor: Colors.gray[200],
     shadowColor: Colors.black,
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 1,
-    elevation: 1,
-    minHeight: 50,
+    shadowRadius: 4,
+    elevation: 3,
+    minHeight: 80,
   },
   containerSelected: {
     backgroundColor: Colors.primary,
     borderColor: Colors.primary,
   },
   iconContainer: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: Colors.gray[100] as string,
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 6,
+    marginRight: 12,
   },
   iconContainerSelected: {
     backgroundColor: "rgba(255, 255, 255, 0.2)",
   },
   contentContainer: {
     flex: 1,
-    marginRight: 4,
+    marginRight: 8,
   },
   name: {
-    fontSize: 12,
-    fontWeight: "500",
+    fontSize: 16,
+    fontWeight: "600",
     color: Colors.text,
-    marginBottom: 2,
+    marginBottom: 4,
   },
   nameSelected: {
     color: Colors.white,
@@ -197,8 +197,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   price: {
-    fontSize: 10,
+    fontSize: 14,
     color: Colors.gray[600],
+    fontWeight: "500",
   },
   priceSelected: {
     color: "rgba(255, 255, 255, 0.8)",
@@ -207,21 +208,22 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "rgba(255, 255, 255, 0.2)",
-    paddingHorizontal: 4,
-    paddingVertical: 2,
-    borderRadius: 3,
-    marginLeft: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+    marginLeft: 8,
   },
   planButtonText: {
-    fontSize: 8,
+    fontSize: 12,
     color: Colors.white,
-    marginRight: 2,
+    marginRight: 4,
+    fontWeight: "500",
   },
   checkbox: {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    borderWidth: 1,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 2,
     borderColor: Colors.gray[300],
     justifyContent: "center",
     alignItems: "center",

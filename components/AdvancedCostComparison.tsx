@@ -17,8 +17,8 @@ export const AdvancedCostComparison: React.FC<AdvancedCostComparisonProps> = ({
     return new Intl.NumberFormat('ja-JP', {
       style: 'currency',
       currency: 'JPY',
-      minimumFractionDigits: 1,
-      maximumFractionDigits: 1,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
     }).format(amount);
   };
 

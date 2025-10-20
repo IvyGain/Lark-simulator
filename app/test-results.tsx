@@ -60,8 +60,8 @@ export default function TestResultsScreen() {
     return new Intl.NumberFormat('ja-JP', {
       style: 'currency',
       currency: 'JPY',
-      minimumFractionDigits: 1,
-      maximumFractionDigits: 1,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
     }).format(amount);
   };
 
@@ -113,21 +113,21 @@ export default function TestResultsScreen() {
             <View style={styles.summaryItem}>
               <Text style={styles.summaryLabel}>削減率</Text>
               <Text style={[styles.summaryValue, { color: Colors.success }]}>
-                {Math.round(calculationResult.savingsPercentage)}%
+                {calculationResult.savingsPercentage.toFixed(1)}%
               </Text>
             </View>
             
             <View style={styles.summaryItem}>
               <Text style={styles.summaryLabel}>ROI</Text>
               <Text style={[styles.summaryValue, { color: Colors.primary }]}>
-                {Math.round(calculationResult.roi)}%
+                {calculationResult.roi.toFixed(1)}%
               </Text>
             </View>
             
             <View style={styles.summaryItem}>
               <Text style={styles.summaryLabel}>投資回収期間</Text>
               <Text style={[styles.summaryValue, { color: Colors.primary }]}>
-                {Math.round(calculationResult.paybackPeriod)}ヶ月
+                {calculationResult.paybackPeriod.toFixed(1)}ヶ月
               </Text>
             </View>
           </View>

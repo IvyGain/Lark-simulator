@@ -1,12 +1,12 @@
+import { tools } from '../constants/tools';
+
 interface UserInputs {
   companyName?: string;
   industry?: string;
   employeeCount: number;
   selectedTools: Array<{
-    id: string;
-    name: string;
-    pricePerUser: number;
-    totalMonthlyCost: number;
+    toolId: string;
+    planIndex: number;
   }>;
   currentChallenges?: string[];
   expectedImprovements?: string[];
@@ -424,33 +424,61 @@ export function generateFormalProposal(
       padding: 20px;
       margin: 20px 0;
     }
+    .cost-comparison-container {
+      position: relative;
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 20px;
+      border: 1px solid #e9ecef;
+      margin: 15px 0;
+    }
     .cost-bar {
       display: flex;
       align-items: center;
-      margin: 10px 0;
+      margin: 12px 0;
+      position: relative;
+      width: 100%;
     }
     .cost-bar-label {
-      width: 150px;
+      width: 140px;
       font-weight: 600;
       color: #495057;
+      font-size: 14px;
+      flex-shrink: 0;
     }
     .cost-bar-visual {
-      flex: 1;
-      height: 30px;
-      margin: 0 10px;
-      border-radius: 4px;
+      height: 40px;
+      margin-left: 15px;
+      border-radius: 8px;
       position: relative;
       display: flex;
       align-items: center;
       padding-left: 15px;
       color: white;
       font-weight: bold;
+      font-size: 13px;
+      min-width: 150px;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
     }
     .current-tools-bar {
-      background: #6c757d;
+      background: linear-gradient(135deg, #dc3545, #c82333);
+      box-shadow: 0 3px 8px rgba(220, 53, 69, 0.3);
+      border: 1px solid #dc3545;
     }
     .lark-bar {
-      background: #495057;
+      background: linear-gradient(135deg, #00A3A1, #007F7D);
+      box-shadow: 0 3px 8px rgba(0, 163, 161, 0.3);
+      border: 1px solid #00A3A1;
+    }
+    .savings-indicator {
+      margin-top: 15px;
+      text-align: center;
+      animation: fadeIn 0.6s ease-in;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .approval-section {
@@ -500,19 +528,22 @@ export function generateFormalProposal(
           <div class="impact-label">年間直接コスト削減</div>
         </div>
         <div class="impact-number">
-          <div class="impact-value">${calculationResults.roi}%</div>
+          <div class="impact-value">${calculationResults.roi.toFixed(1)}%</div>
           <div class="impact-label">投資対効果（ROI）</div>
         </div>
         <div class="impact-number">
-          <div class="impact-value">${calculationResults.paybackPeriod}</div>
+          <div class="impact-value">${calculationResults.paybackPeriod.toFixed(1)}ヶ月</div>
           <div class="impact-label">投資回収期間（月）</div>
         </div>
       </div>
       <p style="font-size: 16px; line-height: 1.8; margin-top: 20px;">
         <strong>提案概要：</strong><br>
-        現在${userInputs.selectedTools.length}種類に分散しているSaaSツールをLarkに統合することで、年間${calculationResults.reductionPercentage}%（¥${calculationResults.annualSavings.toLocaleString()}）の直接コスト削減に加え、
+        現在${userInputs.selectedTools.filter(selectedTool => {
+          const tool = tools.find(t => t.id === selectedTool.toolId);
+          return tool && tool.pricingPlans[selectedTool.planIndex];
+        }).length}種類に分散しているSaaSツールをLarkに統合することで、年間${calculationResults.reductionPercentage.toFixed(1)}%（¥${calculationResults.annualSavings.toLocaleString()}）の直接コスト削減に加え、
         業務効率化による間接効果¥${Math.round(totalProductivityGain).toLocaleString()}を実現します。
-        投資回収期間はわずか${calculationResults.paybackPeriod}ヶ月であり、極めて費用対効果の高い施策です。
+        投資回収期間はわずか${calculationResults.paybackPeriod.toFixed(1)}ヶ月であり、極めて費用対効果の高い施策です。
       </p>
     </div>
 
@@ -530,7 +561,10 @@ export function generateFormalProposal(
         <tr>
           <td style="font-weight: bold;">ツール管理</td>
           <td style="background: #ffebee;">
-            • ${userInputs.selectedTools.length}種類のツールを個別管理<br>
+            • ${userInputs.selectedTools.filter(selectedTool => {
+              const tool = tools.find(t => t.id === selectedTool.toolId);
+              return tool && tool.pricingPlans[selectedTool.planIndex];
+            }).length}種類のツールを個別管理<br>
             • 年間¥${currentAnnualCost.toLocaleString()}のライセンス費<br>
             • 複数ベンダーとの契約管理
           </td>
@@ -605,7 +639,7 @@ export function generateFormalProposal(
         <div style="font-size: 14px; color: #6c757d;">生産性向上効果（年間）</div>
       </div>
       <div style="text-align: center; background: #fff; padding: 20px; border-radius: 8px; border: 2px solid #ffc107; flex: 1; margin: 0 10px;">
-        <div style="font-size: 36px; font-weight: bold; color: #ffc107;">${calculationResults.paybackPeriod}ヶ月</div>
+        <div style="font-size: 36px; font-weight: bold; color: #ffc107;">${calculationResults.paybackPeriod.toFixed(1)}ヶ月</div>
         <div style="font-size: 14px; color: #6c757d;">投資回収期間</div>
       </div>
     </div>
@@ -614,16 +648,23 @@ export function generateFormalProposal(
     
     <div class="visual-chart">
       <h3>コスト比較ビジュアル（年間）</h3>
-      <div class="cost-bar">
-        <div class="cost-bar-label">現在のツール群</div>
-        <div class="cost-bar-visual current-tools-bar" style="width: 100%;">
-          ¥${currentAnnualCost.toLocaleString()}/年
+      <div class="cost-comparison-container">
+        <div class="cost-bar">
+          <div class="cost-bar-label">現在のツール群</div>
+          <div class="cost-bar-visual current-tools-bar" style="width: 100%;">
+            ¥${currentAnnualCost.toLocaleString()}/年
+          </div>
         </div>
-      </div>
-      <div class="cost-bar">
-        <div class="cost-bar-label">Lark統合後</div>
-        <div class="cost-bar-visual lark-bar" style="width: ${Math.round((larkAnnualCost / currentAnnualCost) * 100)}%;">
-          ¥${larkAnnualCost.toLocaleString()}/年
+        <div class="cost-bar">
+          <div class="cost-bar-label">Lark統合後</div>
+          <div class="cost-bar-visual lark-bar" style="width: ${Math.round((larkAnnualCost / currentAnnualCost) * 100)}%;">
+            ¥${larkAnnualCost.toLocaleString()}/年
+          </div>
+        </div>
+        <div class="savings-indicator">
+          <span style="background: #28a745; color: white; padding: 8px 16px; border-radius: 6px; font-size: 14px; font-weight: bold; display: inline-block;">
+            💰 ${calculationResults.reductionPercentage.toFixed(1)}% 削減効果
+          </span>
         </div>
       </div>
       <div style="text-align: center; margin-top: 15px; font-size: 24px; font-weight: bold; color: #2e7d32;">
@@ -857,7 +898,7 @@ export function generateFormalProposal(
         <td>データ移行・導入支援</td>
         <td>¥0</td>
         <td>¥0</td>
-        <td>キャンペーン適用により無償</td>
+        <td>キャンペーン適用により無償<br><small style="color: #666;">※詳細については備考欄に要問合せ</small></td>
       </tr>
       <tr>
         <td>教育・トレーニング</td>
@@ -884,7 +925,10 @@ export function generateFormalProposal(
         <td>SaaSツール統合削減</td>
         <td class="cost-positive">¥${calculationResults.annualSavings.toLocaleString()}</td>
         <td class="cost-positive">¥${(calculationResults.annualSavings * 3).toLocaleString()}</td>
-        <td>現行${userInputs.selectedTools.length}ツール → Lark1つに統合</td>
+        <td>現行${userInputs.selectedTools.filter(selectedTool => {
+          const tool = tools.find(t => t.id === selectedTool.toolId);
+          return tool && tool.pricingPlans[selectedTool.planIndex];
+        }).length}ツール → Lark1つに統合</td>
       </tr>
       <tr>
         <td>生産性向上による効果</td>
@@ -918,9 +962,14 @@ export function generateFormalProposal(
         <th>年額総費用</th>
         <th>主要機能</th>
       </tr>
-      ${userInputs.selectedTools.map(tool => {
-        const monthlyCost = tool.totalMonthlyCost;
-        const userCost = Math.round(monthlyCost / employeeCount);
+      ${userInputs.selectedTools.map(selectedTool => {
+        const tool = tools.find(t => t.id === selectedTool.toolId);
+        if (!tool || !tool.pricingPlans[selectedTool.planIndex]) {
+          return ''; // 無効なツールは表示しない
+        }
+        const plan = tool.pricingPlans[selectedTool.planIndex];
+        const monthlyCost = plan.pricePerUser * employeeCount;
+        const userCost = plan.pricePerUser;
         return `
       <tr>
         <td><strong>${tool.name}</strong></td>
@@ -929,13 +978,16 @@ export function generateFormalProposal(
         <td><strong>¥${(monthlyCost * 12).toLocaleString()}</strong></td>
         <td>専用機能のみ</td>
       </tr>
-      `;}).join('')}
+      `;}).filter(row => row !== '').join('')}
       <tr style="background: #ffebee;">
         <th>現在の合計</th>
         <th>¥${Math.round(currentAnnualCost / employeeCount / 12).toLocaleString()}</th>
         <th><strong>¥${Math.round(currentAnnualCost / 12).toLocaleString()}</strong></th>
         <th><strong>¥${currentAnnualCost.toLocaleString()}</strong></th>
-        <th>${userInputs.selectedTools.length}つのツール管理</th>
+        <th>${userInputs.selectedTools.filter(selectedTool => {
+          const tool = tools.find(t => t.id === selectedTool.toolId);
+          return tool && tool.pricingPlans[selectedTool.planIndex];
+        }).length}つのツール管理</th>
       </tr>
       <tr style="background: #e8f5e8;">
         <th>Lark統合後</th>
@@ -1063,12 +1115,12 @@ export function generateFormalProposal(
         </tr>
         <tr>
           <td><strong>投資回収期間</strong></td>
-          <td>${calculationResults.paybackPeriod}ヶ月で初期投資を回収</td>
+          <td>${calculationResults.paybackPeriod.toFixed(1)}ヶ月で初期投資を回収</td>
           <td style="color: #28a745; font-weight: bold;">✅ 極めて短期（1年以内）</td>
         </tr>
         <tr>
           <td><strong>ROI（投資利益率）</strong></td>
-          <td>年間${calculationResults.roi}%のリターン</td>
+          <td>年間${calculationResults.roi.toFixed(1)}%のリターン</td>
           <td style="color: #28a745; font-weight: bold;">✅ 高収益（100%以上）</td>
         </tr>
         <tr>
@@ -1105,7 +1157,10 @@ export function generateFormalProposal(
       </p>
       <ol style="font-size: 16px; line-height: 1.8;">
         <li><strong>予算承認</strong>：年間¥${larkAnnualCost.toLocaleString()}のLarkライセンス費用</li>
-        <li><strong>導入承認</strong>：現行${userInputs.selectedTools.length}ツールからLarkへの統合移行</li>
+        <li><strong>導入承認</strong>：現行${userInputs.selectedTools.filter(selectedTool => {
+          const tool = tools.find(t => t.id === selectedTool.toolId);
+          return tool && tool.pricingPlans[selectedTool.planIndex];
+        }).length}ツールからLarkへの統合移行</li>
         <li><strong>スケジュール承認</strong>：2024年第2四半期での導入開始</li>
         <li><strong>体制承認</strong>：情報システム部主導による導入プロジェクト推進</li>
         <li><strong>効果測定</strong>：導入6ヶ月後の効果検証とROI確認</li>

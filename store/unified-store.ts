@@ -228,17 +228,17 @@ export const useUnifiedStore = create<UnifiedSimulatorState>()(
           
           // 節約率
           const savingsPercentage = currentMonthlyCost > 0 
-            ? safeDivision(monthlySavings, currentMonthlyCost) * 100 
+            ? safeDivision(monthlySavings, currentMonthlyCost, 0) * 100 
             : 0;
           
-          // ROI計算（年間）
-          const roi = currentAnnualCost > 0 
-            ? safeDivision(annualSavings, currentAnnualCost) * 100 
+          // ROI計算（正しい計算式：(年間削減額 - 年間Larkコスト) / 年間Larkコスト * 100）
+          const roi = larkAnnualCost > 0 
+            ? safeDivision(annualSavings - larkAnnualCost, larkAnnualCost, 0) * 100 
             : 0;
           
-          // 回収期間（月）
+          // 回収期間（月）- Lark導入コストを月間削減額で割る
           const paybackPeriod = monthlySavings > 0 
-            ? safeDivision(larkAnnualCost, monthlySavings) 
+            ? safeDivision(larkAnnualCost, monthlySavings, 0) 
             : 0;
 
           // 労働時間節約の推定

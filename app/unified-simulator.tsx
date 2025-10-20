@@ -81,6 +81,24 @@ export default function UnifiedSimulatorScreen() {
     );
   }
 
+  // selectedToolsから実際のツール情報を取得
+  const selectedToolsWithDetails = selectedTools.map(selectedTool => {
+    const toolInfo = tools.find(tool => tool.id === selectedTool.toolId);
+    if (!toolInfo) return null;
+    
+    const plan = toolInfo.pricingPlans[selectedTool.planIndex];
+    if (!plan) return null;
+
+    return {
+      id: toolInfo.id,
+      name: toolInfo.name,
+      pricePerUser: plan.pricePerUser,
+    };
+  }).filter(Boolean) as Array<{id: string; name: string; pricePerUser: number;}>;
+
+  // selectedToolsのIDのみの配列
+  const selectedToolIds = selectedTools.map(t => t.toolId);
+
   const handleModeSwitch = (newMode: 'simple' | 'advanced' | 'enhanced' | 'unified') => {
     setMode(newMode);
   };
@@ -96,12 +114,7 @@ export default function UnifiedSimulatorScreen() {
         companyName: companyName || '貴社',
         industry: industry || 'IT',
         employeeCount,
-        selectedTools: selectedTools.map(tool => ({
-          id: tool.id,
-          name: tool.name,
-          pricePerUser: tool.pricePerUser,
-          totalMonthlyCost: (tool.customMonthlyFee || tool.pricePerUser * employeeCount),
-        })),
+        selectedTools: selectedTools, // UserInputsの型に合わせて直接使用
         currentChallenges,
         expectedImprovements,
       };
@@ -141,19 +154,18 @@ export default function UnifiedSimulatorScreen() {
       setIsGeneratingDoc(true);
       setDocGenType('formal');
 
+      console.log('Original selectedTools:', selectedTools);
+
       const userInputs = {
         companyName: companyName || '貴社',
         industry: industry || 'IT',
         employeeCount,
-        selectedTools: selectedTools.map(tool => ({
-          id: tool.id,
-          name: tool.name,
-          pricePerUser: tool.pricePerUser,
-          totalMonthlyCost: (tool.customMonthlyFee || tool.pricePerUser * employeeCount),
-        })),
+        selectedTools: selectedTools, // UserInputsの型に合わせて直接使用
         currentChallenges,
         expectedImprovements,
       };
+
+      console.log('UserInputs for formal proposal:', userInputs);
 
       // シミュレート遅延（UX改善のため）
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -217,12 +229,12 @@ export default function UnifiedSimulatorScreen() {
               companyName={companyName}
               industry={industry}
               employeeCount={employeeCount}
-              selectedTools={selectedTools}
+              selectedTools={selectedToolsWithDetails}
               onUpdateCompanyName={setCompanyName}
               onUpdateIndustry={setIndustry}
               onUpdateEmployeeCount={setEmployeeCount}
               onToggleTool={toggleTool}
-              toolsByCategory={toolsByCategory}
+              toolsByCategory={toolsByCategory as any}
               categoryTranslations={categoryTranslations}
             />
             
@@ -263,8 +275,8 @@ export default function UnifiedSimulatorScreen() {
               <CategorySection
                 key={category}
                 category={categoryTranslations[category] || category}
-                tools={toolsByCategory[category]}
-                selectedTools={selectedTools.map(t => t.id)}
+                tools={toolsByCategory[category] as any}
+                selectedTools={selectedToolIds}
                 onToggleTool={toggleTool}
               />
             ))}

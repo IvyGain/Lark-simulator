@@ -26,54 +26,51 @@ export function ResultsSummary({
     return new Intl.NumberFormat('ja-JP', {
       style: 'currency',
       currency: 'JPY',
-      minimumFractionDigits: 1,
-      maximumFractionDigits: 1,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
     }).format(amount);
   };
 
   return (
     <View style={styles.container}>
-      {/* Hero Section - 年間削減額を最も大きく表示 */}
-      <LinearGradient
-        colors={[Colors.success, '#2E8B57']}
-        style={styles.heroCard}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-      >
-        <View style={styles.heroContent}>
-          <Text style={styles.heroLabel}>年間削減コスト</Text>
-          <Text style={styles.heroAmount}>{formatCurrency(metrics.annualCostReduction)}</Text>
-          <View style={styles.heroPercentageContainer}>
-            <Text style={styles.heroPercentage}>{metrics.reductionRate.toFixed(1)}%</Text>
-            <Text style={styles.heroPercentageLabel}>削減</Text>
-          </View>
-        </View>
-        <View style={styles.heroIcon}>
-          <Text style={styles.heroIconText}>💰</Text>
-        </View>
-      </LinearGradient>
-
-      {/* Secondary Metrics Grid */}
-      <View style={styles.metricsGrid}>
-        <View style={styles.metricCard}>
+      {/* Single Row Layout - 年間削減コスト2/4、ROI 1/4、投資回収期間1/4 */}
+      <View style={styles.singleRowLayout}>
+        {/* 年間削減コスト - 2/4 width */}
+        <View style={styles.mainMetricCard}>
           <LinearGradient
-            colors={[Colors.primary + '15', Colors.primary + '25']}
-            style={styles.metricGradient}
+            colors={[Colors.success, '#2E8B57']}
+            style={styles.mainMetricGradient}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
           >
-            <Text style={styles.metricIcon}>📈</Text>
-            <Text style={styles.metricLabel}>ROI</Text>
-            <Text style={styles.metricValue}>{metrics.roi.toFixed(1)}%</Text>
+            <Text style={styles.mainMetricIcon}>💰</Text>
+            <Text style={styles.mainMetricLabel}>年間削減コスト</Text>
+            <Text style={styles.mainMetricValue}>{formatCurrency(metrics.annualCostReduction)}</Text>
+            <Text style={styles.mainMetricPercentage}>{metrics.reductionRate.toFixed(1)}%削減</Text>
           </LinearGradient>
         </View>
 
-        <View style={styles.metricCard}>
+        {/* ROI - 1/4 width */}
+        <View style={styles.secondaryMetricCard}>
+          <LinearGradient
+            colors={[Colors.primary + '15', Colors.primary + '25']}
+            style={styles.secondaryMetricGradient}
+          >
+            <Text style={styles.secondaryMetricIcon}>📈</Text>
+            <Text style={styles.secondaryMetricLabel}>ROI</Text>
+            <Text style={styles.secondaryMetricValue}>{metrics.roi.toFixed(1)}%</Text>
+          </LinearGradient>
+        </View>
+
+        {/* 投資回収期間 - 1/4 width */}
+        <View style={styles.secondaryMetricCard}>
           <LinearGradient
             colors={[Colors.warning + '15', Colors.warning + '25']}
-            style={styles.metricGradient}
+            style={styles.secondaryMetricGradient}
           >
-            <Text style={styles.metricIcon}>⏱️</Text>
-            <Text style={styles.metricLabel}>投資回収期間</Text>
-            <Text style={styles.metricValue}>{metrics.paybackPeriod.toFixed(1)}ヶ月</Text>
+            <Text style={styles.secondaryMetricIcon}>⏱️</Text>
+            <Text style={styles.secondaryMetricLabel}>投資回収期間</Text>
+            <Text style={styles.secondaryMetricValue}>{metrics.paybackPeriod.toFixed(1)}ヶ月</Text>
           </LinearGradient>
         </View>
       </View>
@@ -101,13 +98,18 @@ const styles = StyleSheet.create({
     elevation: 16,
     borderWidth: 1,
     borderColor: Colors.gray[100],
-    minHeight: 450,
+    minHeight: 300,
     transform: [{ scale: 1.02 }],
   },
-  heroCard: {
-    borderRadius: 20,
-    padding: spacing.xl * 1.5,
+  singleRowLayout: {
+    flexDirection: 'row',
     marginBottom: spacing.xl * 1.5,
+    gap: spacing.md,
+    alignItems: 'stretch',
+  },
+  mainMetricCard: {
+    flex: 2, // 2/4 of the width
+    borderRadius: 18,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.2,
@@ -115,10 +117,20 @@ const styles = StyleSheet.create({
     elevation: 12,
     borderWidth: 2,
     borderColor: 'rgba(255, 255, 255, 0.3)',
-    minHeight: 180,
   },
-  heroLabel: {
-    fontSize: 20,
+  mainMetricGradient: {
+    borderRadius: 18,
+    padding: spacing.xl,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 160,
+  },
+  mainMetricIcon: {
+    fontSize: 32,
+    marginBottom: spacing.sm,
+  },
+  mainMetricLabel: {
+    fontSize: 16,
     fontWeight: '700',
     color: 'rgba(255, 255, 255, 0.95)',
     marginBottom: spacing.sm,
@@ -128,61 +140,30 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
   },
-  heroAmount: {
-    fontSize: 48,
+  mainMetricValue: {
+    fontSize: 28,
     fontWeight: '900',
     color: 'white',
     textAlign: 'center',
     marginBottom: spacing.xs,
-    letterSpacing: -1,
+    letterSpacing: -0.5,
     textShadowColor: 'rgba(0, 0, 0, 0.4)',
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 4,
   },
-  heroPercentage: {
-    fontSize: 24,
-    fontWeight: '800',
+  mainMetricPercentage: {
+    fontSize: 14,
+    fontWeight: '600',
     color: 'rgba(255, 255, 255, 0.9)',
     textAlign: 'center',
-    letterSpacing: 0.5,
+    letterSpacing: 0.3,
     textShadowColor: 'rgba(0, 0, 0, 0.3)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
   },
-  heroIconText: {
-    fontSize: 32,
-    marginBottom: spacing.sm,
-    textAlign: 'center',
-  },
-  heroContent: {
-    alignItems: 'center',
-    flex: 1,
-  },
-  heroPercentageContainer: {
-    alignItems: 'center',
-    marginTop: spacing.sm,
-  },
-  heroPercentageLabel: {
-    fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.8)',
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  heroIcon: {
-    alignItems: 'center',
-    marginTop: spacing.sm,
-  },
-  metricsGrid: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: spacing.xl * 1.5,
-    gap: spacing.md,
-  },
-  metricCard: {
-    flex: 1,
+  secondaryMetricCard: {
+    flex: 1, // 1/4 of the width
     borderRadius: 18,
-    padding: spacing.lg * 1.2,
-    alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.15,
@@ -190,38 +171,32 @@ const styles = StyleSheet.create({
     elevation: 8,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.2)',
-    minHeight: 140,
   },
-  metricGradient: {
+  secondaryMetricGradient: {
     borderRadius: 18,
-    padding: spacing.lg * 1.2,
+    padding: spacing.lg,
     alignItems: 'center',
-    minHeight: 140,
+    justifyContent: 'center',
+    minHeight: 160,
   },
-  metricIcon: {
-    fontSize: 28,
+  secondaryMetricIcon: {
+    fontSize: 24,
     marginBottom: spacing.sm,
   },
-  metricLabel: {
-    fontSize: 14,
+  secondaryMetricLabel: {
+    fontSize: 12,
     fontWeight: '600',
-    color: 'rgba(255, 255, 255, 0.9)',
+    color: Colors.text,
     marginBottom: spacing.xs,
     textAlign: 'center',
     letterSpacing: 0.3,
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
   },
-  metricValue: {
-    fontSize: 20,
+  secondaryMetricValue: {
+    fontSize: 18,
     fontWeight: '800',
-    color: 'white',
+    color: Colors.primary,
     textAlign: 'center',
     letterSpacing: 0.5,
-    textShadowColor: 'rgba(0, 0, 0, 0.4)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 3,
   },
   impactStatement: {
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
