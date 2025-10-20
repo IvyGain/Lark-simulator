@@ -16,14 +16,19 @@ export interface Tool {
 
 // Category translations
 export const categoryTranslations: Record<string, string> = {
-  "Communication": "コミュニケーション",
-  "Video Conferencing": "ビデオ会議",
-  "Productivity": "生産性ツール",
-  "Storage": "ストレージ",
-  "Project Management": "プロジェクト管理",
-  "Knowledge Management": "ナレッジ管理",
-  "CRM": "顧客管理",
-  "Scheduling": "日程調整"
+  "communication": "コミュニケーション",
+  "video_conferencing": "ビデオ会議",
+  "productivity": "生産性ツール",
+  "storage": "ストレージ",
+  "project_management": "プロジェクト管理",
+  "knowledge_management": "ナレッジ管理",
+  "crm": "顧客管理",
+  "scheduling": "日程調整",
+  "hr_management": "人事・労務",
+  "document_management": "文書管理",
+  "invoicing": "請求書管理",
+  "back_office": "バックオフィス",
+  "workflow": "ワークフロー"
 };
 
 export const tools: Tool[] = [
@@ -235,6 +240,175 @@ export const tools: Tool[] = [
       { name: 'Teams', pricePerUser: 2400, description: 'チーム機能、高度な統合' }
     ],
     icon: '📅',
+    defaultPlanIndex: 1
+  },
+
+  // HR Management
+  {
+    id: 'smarthr',
+    name: 'SmartHR',
+    category: 'hr_management',
+    pricingPlans: [
+      { name: 'スモール', pricePerUser: 3980, description: '基本的な人事労務機能' },
+      { name: 'スタンダード', pricePerUser: 5980, description: '給与計算、年末調整' },
+      { name: 'プロフェッショナル', pricePerUser: 9800, description: '人事評価、組織図' },
+      { name: 'エンタープライズ', pricePerUser: 15000, description: 'カスタマイズ、API連携' }
+    ],
+    icon: '👥',
+    defaultPlanIndex: 0
+  },
+  {
+    id: 'jobcan-attendance',
+    name: 'ジョブカン勤怠管理',
+    category: 'hr_management',
+    pricingPlans: [
+      { name: '無料プラン', pricePerUser: 0, description: '10名まで、基本機能' },
+      { name: '有料プラン', pricePerUser: 200, description: '勤怠管理、シフト管理' },
+      { name: 'プラス', pricePerUser: 300, description: '工数管理、プロジェクト管理' },
+      { name: 'プレミアム', pricePerUser: 400, description: '高度な分析、API連携' }
+    ],
+    icon: '⏰',
+    defaultPlanIndex: 1
+  },
+  {
+    id: 'moneyforward-payroll',
+    name: 'マネーフォワードクラウド給与',
+    category: 'hr_management',
+    pricingPlans: [
+      { name: 'スモールビジネス', pricePerUser: 2980, description: '基本給与計算' },
+      { name: 'ビジネス', pricePerUser: 4980, description: '年末調整、マイナンバー管理' },
+      { name: 'エンタープライズ', pricePerUser: 9800, description: 'API連携、カスタマイズ' }
+    ],
+    icon: '💰',
+    defaultPlanIndex: 0
+  },
+
+  // Workflow & Back Office
+  {
+    id: 'kintone',
+    name: 'kintone',
+    category: 'workflow',
+    pricingPlans: [
+      { name: 'ライトコース', pricePerUser: 1500, description: '基本的なアプリ作成' },
+      { name: 'スタンダードコース', pricePerUser: 2500, description: 'ワークフロー、外部連携' }
+    ],
+    icon: '🔧',
+    defaultPlanIndex: 0
+  },
+  {
+    id: 'cybozu-office',
+    name: 'サイボウズOffice',
+    category: 'workflow',
+    pricingPlans: [
+      { name: 'スタンダードコース', pricePerUser: 500, description: 'グループウェア基本機能' },
+      { name: 'プレミアムコース', pricePerUser: 800, description: 'ワークフロー、カスタマイズ' },
+      { name: 'チームプラン', pricePerUser: 1000, description: 'チーム機能、高度な連携' }
+    ],
+    icon: '🏢',
+    defaultPlanIndex: 0
+  },
+  {
+    id: 'garoon',
+    name: 'Garoon',
+    category: 'workflow',
+    pricingPlans: [
+      { name: 'スタンダードコース', pricePerUser: 845, description: '基本グループウェア機能' },
+      { name: 'プレミアムコース', pricePerUser: 1400, description: 'ワークフロー、高度な機能' }
+    ],
+    icon: '⚙️',
+    defaultPlanIndex: 0
+  },
+
+  // CRM & Sales (追加)
+  {
+    id: 'sansan',
+    name: 'Sansan',
+    category: 'crm',
+    pricingPlans: [
+      { name: 'スタンダード', pricePerUser: 11000, description: '名刺管理、営業支援' },
+      { name: 'プレミアム', pricePerUser: 16500, description: 'AI分析、高度な機能' },
+      { name: 'エンタープライズ', pricePerUser: 22000, description: 'カスタマイズ、API連携' }
+    ],
+    icon: '📇',
+    defaultPlanIndex: 0
+  },
+  {
+    id: 'eight',
+    name: 'Eight',
+    category: 'crm',
+    pricingPlans: [
+      { name: 'フリー', pricePerUser: 0, description: '基本名刺管理' },
+      { name: 'プレミアム', pricePerUser: 980, description: '高精度スキャン、検索機能' },
+      { name: 'ビジネス', pricePerUser: 1980, description: 'チーム機能、分析' }
+    ],
+    icon: '💼',
+    defaultPlanIndex: 1
+  },
+  {
+    id: 'esales-manager',
+    name: 'eセールスマネージャー',
+    category: 'crm',
+    pricingPlans: [
+      { name: 'スタンダード', pricePerUser: 6000, description: '基本CRM機能' },
+      { name: 'プロフェッショナル', pricePerUser: 9000, description: 'MA機能、高度な分析' },
+      { name: 'エンタープライズ', pricePerUser: 12000, description: 'カスタマイズ、API連携' }
+    ],
+    icon: '📊',
+    defaultPlanIndex: 0
+  },
+
+  // Document Management
+  {
+    id: 'docusign',
+    name: 'DocuSign',
+    category: 'document_management',
+    pricingPlans: [
+      { name: 'Personal', pricePerUser: 1500, description: '基本電子署名' },
+      { name: 'Standard', pricePerUser: 3000, description: 'テンプレート、リマインダー' },
+      { name: 'Business Pro', pricePerUser: 6500, description: '高度なワークフロー' },
+      { name: 'Enterprise Pro', pricePerUser: 9000, description: 'API、高度なセキュリティ' }
+    ],
+    icon: '📄',
+    defaultPlanIndex: 1
+  },
+  {
+    id: 'cloudsign',
+    name: 'クラウドサイン',
+    category: 'document_management',
+    pricingPlans: [
+      { name: 'Light', pricePerUser: 11000, description: '月5件まで、基本機能' },
+      { name: 'Corporate', pricePerUser: 22000, description: '月50件まで、テンプレート' },
+      { name: 'Enterprise', pricePerUser: 55000, description: '無制限、API連携' }
+    ],
+    icon: '✍️',
+    defaultPlanIndex: 0
+  },
+
+  // Invoicing
+  {
+    id: 'misoca',
+    name: 'Misoca',
+    category: 'invoicing',
+    pricingPlans: [
+      { name: 'フリー', pricePerUser: 0, description: '月5通まで' },
+      { name: 'プラン15', pricePerUser: 880, description: '月15通まで' },
+      { name: 'プラン100', pricePerUser: 3300, description: '月100通まで' },
+      { name: 'プラン1000', pricePerUser: 11000, description: '月1000通まで' }
+    ],
+    icon: '📋',
+    defaultPlanIndex: 1
+  },
+  {
+    id: 'makeleaps',
+    name: 'MakeLeaps',
+    category: 'invoicing',
+    pricingPlans: [
+      { name: 'フリー', pricePerUser: 0, description: '月3通まで' },
+      { name: 'スターター', pricePerUser: 550, description: '月10通まで' },
+      { name: 'アンリミテッド', pricePerUser: 1100, description: '無制限' },
+      { name: 'エンタープライズ', pricePerUser: 2200, description: 'API、カスタマイズ' }
+    ],
+    icon: '📊',
     defaultPlanIndex: 1
   }
 ];

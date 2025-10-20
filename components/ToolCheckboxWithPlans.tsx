@@ -46,11 +46,9 @@ export function ToolCheckboxWithPlans({
         onPress={onToggle}
       >
         <View style={[styles.iconContainer, isSelected && styles.iconContainerSelected]}>
-          <FontAwesome
-            name={tool.icon as any}
-            size={20}
-            color={isSelected ? Colors.white : Colors.primary}
-          />
+          <Text style={styles.iconText}>
+            {tool.icon}
+          </Text>
         </View>
         
         <View style={styles.contentContainer}>
@@ -148,10 +146,10 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 16,
+    padding: 20,
     backgroundColor: Colors.white,
     borderRadius: 12,
-    marginBottom: 8,
+    marginBottom: 12,
     marginHorizontal: 2,
     borderWidth: 1,
     borderColor: Colors.gray[200],
@@ -160,33 +158,36 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
-    minHeight: 80,
+    minHeight: 100,
   },
   containerSelected: {
     backgroundColor: Colors.primary,
     borderColor: Colors.primary,
   },
   iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     backgroundColor: Colors.gray[100] as string,
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 12,
+    marginRight: 16,
   },
   iconContainerSelected: {
     backgroundColor: "rgba(255, 255, 255, 0.2)",
+  },
+  iconText: {
+    fontSize: 28,
   },
   contentContainer: {
     flex: 1,
     marginRight: 8,
   },
   name: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "600",
     color: Colors.text,
-    marginBottom: 4,
+    marginBottom: 6,
   },
   nameSelected: {
     color: Colors.white,
@@ -197,7 +198,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   price: {
-    fontSize: 14,
+    fontSize: 16,
     color: Colors.gray[600],
     fontWeight: "500",
   },
