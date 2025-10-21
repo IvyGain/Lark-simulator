@@ -1,15 +1,14 @@
 import React, { useEffect, useRef } from 'react'
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated, Linking, Dimensions } from 'react-native'
 import { useRouter } from 'expo-router'
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated, Dimensions } from 'react-native'
+import { LinearGradient } from 'expo-linear-gradient'
+import Colors from '@/constants/colors'
+import { useUnifiedStore } from '@/store/unified-store'
+import { tools } from '@/constants/tools'
 import { ResultsSummary } from '@/components/ResultsSummary'
 import { ToolsBreakdownTable } from '@/components/ToolsBreakdownTable'
 import { VisualCostComparison } from '@/components/VisualCostComparison'
 import { CostComparisonBarChart } from '@/components/CostComparisonBarChart'
-import { LinearGradient } from 'expo-linear-gradient'
-
-import { useUnifiedStore } from '@/store/unified-store'
-import { tools } from '@/constants/tools'
-import Colors from '@/constants/colors'
 
 const { width: screenWidth } = Dimensions.get('window')
 
@@ -94,37 +93,27 @@ export default function ResultsPage() {
   }
 
   const handlePrimaryButtonPress = () => {
-    console.log('Primary CTA pressed - Start Free Trial')
-    // Navigate to trial signup or external link
+    console.log('Primary CTA pressed - Lark Free Install')
+    Linking.openURL('https://www.customercloud.co/lark-ivygain')
   }
 
   const handleSecondaryButtonPress = () => {
-    console.log('Secondary CTA pressed - Contact Expert')
-    // Navigate to contact form or external link
+    console.log('Secondary CTA pressed - Consultation')
+    Linking.openURL('https://ivygain-project.jp.larksuite.com/scheduler/1077edbc8cd5e47a')
   }
 
-  const handleGenerateProposal = () => {
-    console.log('Generate Proposal pressed')
-    // Navigate to proposal generation page
+  const handleProposalButtonPress = () => {
+    console.log('Proposal CTA pressed - Proposal Creation')
+    Linking.openURL('https://www.customercloud.co/lark-ivygain')
   }
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('ja-JP', {
-      style: 'currency',
-      currency: 'JPY',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount)
-  }
-
-  // If no calculation results, redirect back
-  if (!calculationResults || selectedTools.length === 0) {
+  if (!calculationResults) {
     return (
       <View style={styles.container}>
         <View style={styles.content}>
-          <Text style={styles.errorText}>計算結果がありません。最初からやり直してください。</Text>
+          <Text style={styles.errorText}>計算結果が見つかりません</Text>
           <TouchableOpacity style={styles.backButton} onPress={handleReset}>
-            <Text style={styles.backButtonText}>最初に戻る</Text>
+            <Text style={styles.backButtonText}>戻る</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -134,247 +123,289 @@ export default function ResultsPage() {
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
-        {/* Professional Header */}
-        <Animated.View 
-          style={[
-            styles.header,
-            {
-              opacity: fadeAnim,
-              transform: [{ translateY: slideAnim }]
-            }
-          ]}
-        >
-          <LinearGradient
-            colors={['#4F46E5', '#7C3AED', '#EC4899']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.headerGradient}
-          >
-            <View style={styles.headerContent}>
-              <View style={styles.brandSection}>
-                <Text style={styles.brandLogo}>🐦 Lark</Text>
-                <Text style={styles.brandTagline}>Business Transformation Platform</Text>
+        <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
+          {/* Header */}
+          <View style={styles.header}>
+            <LinearGradient
+              colors={[Colors.primary, Colors.secondary]}
+              style={styles.headerGradient}
+            >
+              <View style={styles.headerContent}>
+                <View style={styles.brandSection}>
+                  <Text style={styles.brandLogo}>Lark</Text>
+                  <Text style={styles.brandTagline}>コスト削減シミュレーション</Text>
+                </View>
+                <TouchableOpacity style={styles.backButtonHeader} onPress={handleReset}>
+                  <Text style={styles.backButtonHeaderText}>戻る</Text>
+                </TouchableOpacity>
               </View>
-              
-              <TouchableOpacity style={styles.backButtonHeader} onPress={handleReset}>
-                <Text style={styles.backButtonHeaderText}>← 新しい計算</Text>
-              </TouchableOpacity>
-            </View>
-          </LinearGradient>
-        </Animated.View>
+            </LinearGradient>
+          </View>
 
-        {/* Hero Section */}
-        <Animated.View 
-          style={[
-            styles.heroSection,
-            {
-              opacity: heroAnim,
-              transform: [{ scale: heroAnim }]
-            }
-          ]}
-        >
-          <LinearGradient
-            colors={['#FFFFFF', '#F8FAFC']}
-            style={styles.heroGradient}
-          >
-            <View style={styles.heroContent}>
-              <Text style={styles.heroTitle}>
-                🎉 コスト削減シミュレーション結果
-              </Text>
-              <Text style={styles.heroSubtitle}>
-                {companyName || 'あなたの会社'}での Lark 導入効果
-              </Text>
-              
-              {/* Key Metrics Cards - 4つのカードに拡張 */}
-              <View style={styles.metricsGrid}>
-                <View style={styles.metricCard}>
-                  <LinearGradient
-                    colors={[Colors.success, '#2E8B57']}
-                    style={styles.metricGradient}
-                  >
-                    <Text style={styles.metricValue}>{formatCurrency(annualSavings)}</Text>
-                    <Text style={styles.metricLabel}>年間削減額</Text>
-                  </LinearGradient>
+          {/* Hero Section */}
+          <Animated.View style={[styles.heroSection, { opacity: heroAnim }]}>
+            <LinearGradient
+              colors={['rgba(255, 255, 255, 0.95)', 'rgba(255, 255, 255, 0.85)']}
+              style={styles.heroGradient}
+            >
+              <View style={styles.heroContent}>
+                <Text style={styles.heroTitle}>
+                  年間 ¥{annualSavings.toLocaleString()} の削減効果
+                </Text>
+                <Text style={styles.heroSubtitle}>
+                  {companyName || '貴社'}のコスト最適化シミュレーション結果
+                </Text>
+                
+                {/* Metrics Grid */}
+                <View style={styles.metricsGrid}>
+                  <View style={styles.metricCard}>
+                    <LinearGradient
+                      colors={[Colors.primary, Colors.secondary]}
+                      style={styles.metricGradient}
+                    >
+                      <Text style={styles.metricValue}>{reductionPercentage.toFixed(1)}%</Text>
+                      <Text style={styles.metricLabel}>コスト削減率</Text>
+                    </LinearGradient>
+                  </View>
+                  
+                  <View style={styles.metricCard}>
+                    <LinearGradient
+                      colors={[Colors.accent, '#FF6B6B']}
+                      style={styles.metricGradient}
+                    >
+                      <Text style={styles.metricValue}>{roi.toFixed(1)}%</Text>
+                      <Text style={styles.metricLabel}>ROI</Text>
+                    </LinearGradient>
+                  </View>
+                  
+                  <View style={styles.metricCard}>
+                    <LinearGradient
+                      colors={['#4ECDC4', '#44A08D']}
+                      style={styles.metricGradient}
+                    >
+                      <Text style={styles.metricValue}>{paybackPeriod.toFixed(1)}</Text>
+                      <Text style={styles.metricLabel}>投資回収期間（月）</Text>
+                    </LinearGradient>
+                  </View>
+                  
+                  <View style={styles.metricCard}>
+                    <LinearGradient
+                      colors={['#667eea', '#764ba2']}
+                      style={styles.metricGradient}
+                    >
+                      <Text style={styles.metricValue}>¥{monthlySavings.toLocaleString()}</Text>
+                      <Text style={styles.metricLabel}>月間削減額</Text>
+                    </LinearGradient>
+                  </View>
+                </View>
+              </View>
+            </LinearGradient>
+          </Animated.View>
+
+          {/* Content */}
+          <View style={styles.content}>
+            {/* Summary Section */}
+            <View style={styles.summarySection}>
+              <ResultsSummary metrics={summaryMetrics} />
+            </View>
+
+            {/* Visual Comparison */}
+            <View style={styles.visualSection}>
+              <VisualCostComparison 
+                currentCost={currentMonthlyCost}
+                larkCost={larkMonthlyCost}
+                savings={monthlySavings}
+              />
+            </View>
+
+            {/* Chart Section */}
+            <View style={styles.chartSection}>
+              <CostComparisonBarChart 
+                currentCost={currentMonthlyCost}
+                larkCost={larkMonthlyCost}
+                savings={monthlySavings}
+              />
+            </View>
+
+            {/* Tools Breakdown */}
+            <View style={styles.breakdownSection}>
+              <ToolsBreakdownTable selectedToolsWithPrices={selectedToolsWithPrices} />
+            </View>
+
+            {/* Simulation Details */}
+            <View style={styles.simulationSection}>
+              <View style={styles.simulationCard}>
+                <Text style={styles.simulationTitle}>シミュレーション詳細</Text>
+                <View style={styles.simulationContent}>
+                  <View style={styles.simulationRow}>
+                    <Text style={styles.simulationLabel}>会社名</Text>
+                    <Text style={styles.simulationValue}>{companyName || '未設定'}</Text>
+                  </View>
+                  <View style={styles.simulationRow}>
+                    <Text style={styles.simulationLabel}>業界</Text>
+                    <Text style={styles.simulationValue}>{industry || '未設定'}</Text>
+                  </View>
+                  <View style={styles.simulationRow}>
+                    <Text style={styles.simulationLabel}>従業員数</Text>
+                    <Text style={styles.simulationValue}>{employeeCount}人</Text>
+                  </View>
+                  <View style={styles.simulationRow}>
+                    <Text style={styles.simulationLabel}>選択ツール数</Text>
+                    <Text style={styles.simulationValue}>{selectedTools.length}個</Text>
+                  </View>
+                </View>
+                <TouchableOpacity style={styles.editButton} onPress={handleReset}>
+                  <Text style={styles.editButtonText}>条件を変更する</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* Trust Elements Section */}
+            <View style={styles.trustSection}>
+              <Text style={styles.trustTitle}>なぜLarkが選ばれるのか</Text>
+              <View style={styles.trustGrid}>
+                <View style={styles.trustCard}>
+                  <Text style={styles.trustIcon}>🔒</Text>
+                  <Text style={styles.trustLabel}>セキュリティ</Text>
+                  <Text style={styles.trustDescription}>エンタープライズ級のセキュリティ</Text>
+                </View>
+                <View style={styles.trustCard}>
+                  <Text style={styles.trustIcon}>🌍</Text>
+                  <Text style={styles.trustLabel}>グローバル対応</Text>
+                  <Text style={styles.trustDescription}>世界中で利用可能</Text>
+                </View>
+              </View>
+            </View>
+
+            {/* Professional Support Section */}
+            <View style={styles.professionalSection}>
+              <Text style={styles.professionalTitle}>プロフェッショナル導入サポート</Text>
+              <View style={styles.professionalContent}>
+                <View style={styles.benefitCard}>
+                  <Text style={styles.benefitIcon}>⚡</Text>
+                  <Text style={styles.benefitTitle}>導入期間短縮</Text>
+                  <Text style={styles.benefitDescription}>
+                    専門チームによる迅速な導入支援で、通常の50%の期間で運用開始が可能です。
+                  </Text>
                 </View>
                 
-                <View style={styles.metricCard}>
-                  <LinearGradient
-                    colors={[Colors.primary, '#7C3AED']}
-                    style={styles.metricGradient}
-                  >
-                    <Text style={styles.metricValue}>{reductionPercentage.toFixed(1)}%</Text>
-                    <Text style={styles.metricLabel}>コスト削減率</Text>
-                  </LinearGradient>
+                <View style={styles.benefitCard}>
+                  <Text style={styles.benefitIcon}>📈</Text>
+                  <Text style={styles.benefitTitle}>ユーザー定着率向上</Text>
+                  <Text style={styles.benefitDescription}>
+                    継続的なトレーニングとサポートにより、95%以上のユーザー定着率を実現します。
+                  </Text>
                 </View>
                 
-                <View style={styles.metricCard}>
-                  <LinearGradient
-                    colors={['#FF6B6B', '#FF8E8E']}
-                    style={styles.metricGradient}
-                  >
-                    <Text style={styles.metricValue}>{roi.toFixed(1)}%</Text>
-                    <Text style={styles.metricLabel}>ROI（投資対効果）</Text>
-                  </LinearGradient>
+                <View style={styles.benefitCard}>
+                  <Text style={styles.benefitIcon}>💰</Text>
+                  <Text style={styles.benefitTitle}>ROI最大化戦略</Text>
+                  <Text style={styles.benefitDescription}>
+                    データ分析に基づく最適化提案で、投資対効果を最大限に引き出します。
+                  </Text>
                 </View>
+              </View>
+
+              {/* Support Details Section */}
+              <View style={styles.supportDetailsSection}>
+                <Text style={styles.supportDetailsTitle}>導入支援の詳細内容</Text>
+                <Text style={styles.supportDetailsDescription}>
+                  Larkの最大効率を発揮するためのノウハウを活かした無料相談構築設計をご支援します。
+                </Text>
+                <View style={styles.supportDetailsList}>
+                  <View style={styles.supportDetailsItem}>
+                    <Text style={styles.supportDetailsIcon}>🏗️</Text>
+                    <Text style={styles.supportDetailsText}>業務基盤システム構築代行</Text>
+                  </View>
+                  <View style={styles.supportDetailsItem}>
+                    <Text style={styles.supportDetailsIcon}>📊</Text>
+                    <Text style={styles.supportDetailsText}>データ移行・初期設定の代行</Text>
+                  </View>
+                  <View style={styles.supportDetailsItem}>
+                    <Text style={styles.supportDetailsIcon}>🎓</Text>
+                    <Text style={styles.supportDetailsText}>社員向けオンボーディング研修・運用サポート</Text>
+                  </View>
+                  <View style={styles.supportDetailsItem}>
+                    <Text style={styles.supportDetailsIcon}>🛡️</Text>
+                    <Text style={styles.supportDetailsText}>導入後3ヶ月間の無料サポート</Text>
+                  </View>
+                  <View style={styles.supportDetailsItem}>
+                    <Text style={styles.supportDetailsIcon}>⚙️</Text>
+                    <Text style={styles.supportDetailsText}>カスタマイズ・運用最適化支援</Text>
+                  </View>
+                </View>
+              </View>
+
+              {/* Authority Section */}
+              <View style={styles.authoritySection}>
+                <Text style={styles.authorityTitle}>導入実績と専門性</Text>
+                <View style={styles.authorityStats}>
+                  <View style={styles.statItem}>
+                    <Text style={styles.statNumber}>500+</Text>
+                    <Text style={styles.statLabel}>企業導入実績</Text>
+                  </View>
+                  <View style={styles.statItem}>
+                    <Text style={styles.statNumber}>98%</Text>
+                    <Text style={styles.statLabel}>顧客満足度</Text>
+                  </View>
+                  <View style={styles.statItem}>
+                    <Text style={styles.statNumber}>24/7</Text>
+                    <Text style={styles.statLabel}>サポート体制</Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+
+            {/* CTA Section */}
+            <LinearGradient
+              colors={[Colors.primary, Colors.secondary, Colors.accent]}
+              style={styles.ctaSection}
+            >
+              <View style={styles.ctaContent}>
+                <Text style={styles.ctaTitle}>
+                  今すぐLarkで{'\n'}コスト削減を始めませんか？
+                </Text>
+                <Text style={styles.ctaSubtitle}>
+                  年間¥{annualSavings.toLocaleString()}の削減効果を実現し、{'\n'}
+                  業務効率を大幅に向上させましょう
+                </Text>
                 
-                <View style={styles.metricCard}>
-                  <LinearGradient
-                    colors={['#FFA726', '#FFB74D']}
-                    style={styles.metricGradient}
-                  >
-                    <Text style={styles.metricValue}>{paybackPeriod.toFixed(1)}ヶ月</Text>
-                    <Text style={styles.metricLabel}>投資回収期間</Text>
-                  </LinearGradient>
-                </View>
-              </View>
-            </View>
-          </LinearGradient>
-        </Animated.View>
-
-        {/* Main Content */}
-        <Animated.View 
-          style={[
-            styles.content,
-            {
-              opacity: fadeAnim,
-              transform: [{ translateY: slideAnim }]
-            }
-          ]}
-        >
-          {/* Summary Section */}
-          <View style={styles.summarySection}>
-            <ResultsSummary 
-              metrics={summaryMetrics}
-              companyName={companyName}
-              employeeCount={employeeCount}
-            />
-          </View>
-
-          {/* Visual Comparison Section */}
-          <View style={styles.visualSection}>
-            <VisualCostComparison 
-              currentMonthlyCost={currentMonthlyCost}
-              larkMonthlyCost={larkMonthlyCost}
-              monthlySavings={monthlySavings}
-              annualSavings={annualSavings}
-            />
-          </View>
-
-          {/* Simulation Results & Prerequisites Section */}
-          <View style={styles.simulationSection}>
-            <View style={styles.simulationCard}>
-              <Text style={styles.simulationTitle}>シミュレーション結果</Text>
-              <View style={styles.simulationContent}>
-                <View style={styles.simulationRow}>
-                  <Text style={styles.simulationLabel}>業種</Text>
-                  <Text style={styles.simulationValue}>{industry || '未設定'}</Text>
-                </View>
-                <View style={styles.simulationRow}>
-                  <Text style={styles.simulationLabel}>従業員数</Text>
-                  <Text style={styles.simulationValue}>{employeeCount}名</Text>
-                </View>
-                <View style={styles.simulationRow}>
-                  <Text style={styles.simulationLabel}>選択ツール数</Text>
-                  <Text style={styles.simulationValue}>{selectedTools.length}個</Text>
-                </View>
-              </View>
-              <TouchableOpacity 
-                style={styles.editButton}
-                onPress={() => router.push('/simulator')}
-              >
-                <Text style={styles.editButtonText}>前提条件を編集</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          {/* Cost Comparison Bar Chart */}
-          <View style={styles.chartSection}>
-            <CostComparisonBarChart 
-              currentAnnualCost={currentMonthlyCost * 12}
-              larkAnnualCost={larkMonthlyCost * 12}
-              annualSavings={annualSavings}
-            />
-          </View>
-
-          {/* Tools Breakdown Section */}
-          <View style={styles.breakdownSection}>
-            <ToolsBreakdownTable 
-              selectedTools={selectedToolsWithPrices}
-              larkPricePerUser={larkMonthlyCost / employeeCount}
-              userCount={employeeCount}
-            />
-          </View>
-
-          {/* Trust Elements */}
-          <View style={styles.trustSection}>
-            <Text style={styles.trustTitle}>🏆 なぜ Lark が選ばれるのか</Text>
-            <View style={styles.trustGrid}>
-              <View style={styles.trustCard}>
-                <Text style={styles.trustIcon}>🚀</Text>
-                <Text style={styles.trustLabel}>生産性向上</Text>
-                <Text style={styles.trustDescription}>平均30%の業務効率化</Text>
-              </View>
-              <View style={styles.trustCard}>
-                <Text style={styles.trustIcon}>🔒</Text>
-                <Text style={styles.trustLabel}>エンタープライズセキュリティ</Text>
-                <Text style={styles.trustDescription}>ISO27001認証取得</Text>
-              </View>
-              <View style={styles.trustCard}>
-                <Text style={styles.trustIcon}>🌍</Text>
-                <Text style={styles.trustLabel}>グローバル対応</Text>
-                <Text style={styles.trustDescription}>100カ国以上で利用</Text>
-              </View>
-            </View>
-          </View>
-
-          {/* CTA Section */}
-          <LinearGradient
-            colors={['#4F46E5', '#7C3AED', '#EC4899']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.ctaSection}
-          >
-            <View style={styles.ctaContent}>
-              <Text style={styles.ctaTitle}>✨ 今すぐLarkで業務効率を革新しましょう</Text>
-              <Text style={styles.ctaSubtitle}>
-                {employeeCount}名規模で年間{formatCurrency(annualSavings)}の削減効果を実現
-              </Text>
-              
-              <View style={styles.ctaButtons}>
-                <TouchableOpacity 
-                  onPress={handlePrimaryButtonPress}
-                  activeOpacity={0.8}
-                >
-                  <LinearGradient
-                    colors={['#FFFFFF', '#F8FAFC']}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }}
+                <View style={styles.ctaButtons}>
+                  <TouchableOpacity 
                     style={styles.primaryButton}
+                    onPress={handlePrimaryButtonPress}
                   >
-                    <View style={styles.primaryButtonInner}>
-                      <Text style={styles.primaryButtonText}>🚀 無料トライアルを開始</Text>
-                    </View>
-                  </LinearGradient>
-                </TouchableOpacity>
-                
-                <TouchableOpacity 
-                  style={styles.secondaryButton}
-                  onPress={handleSecondaryButtonPress}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.secondaryButtonText}>💬 専門家に相談する</Text>
-                </TouchableOpacity>
-                
-                <TouchableOpacity 
-                  style={styles.proposalButton}
-                  onPress={handleGenerateProposal}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.proposalButtonText}>📄 稟議書を作成する</Text>
-                </TouchableOpacity>
+                    <LinearGradient
+                      colors={['#FFFFFF', '#F8F9FA']}
+                      style={styles.primaryButtonInner}
+                    >
+                      <Text style={styles.primaryButtonText}>
+                        Larkの無料インストールはこちら
+                      </Text>
+                    </LinearGradient>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity 
+                    style={styles.secondaryButton}
+                    onPress={handleSecondaryButtonPress}
+                  >
+                    <Text style={styles.secondaryButtonText}>
+                      導入に関するご質問・無料相談
+                    </Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity 
+                    style={styles.proposalButton}
+                    onPress={handleProposalButtonPress}
+                  >
+                    <Text style={styles.proposalButtonText}>
+                      稟議書を作成する
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-          </LinearGradient>
+            </LinearGradient>
+          </View>
         </Animated.View>
       </ScrollView>
     </View>
@@ -602,6 +633,83 @@ const styles = StyleSheet.create({
     color: Colors.gray[600],
     textAlign: 'center',
   },
+  professionalSection: {
+    backgroundColor: Colors.white,
+    borderRadius: 20,
+    padding: 24,
+    marginBottom: 32,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.1,
+    shadowRadius: 16,
+    elevation: 8,
+  },
+  professionalTitle: {
+    fontSize: 24,
+    fontWeight: '800',
+    color: Colors.text,
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  professionalContent: {
+    marginBottom: 24,
+  },
+  benefitCard: {
+    backgroundColor: Colors.gray[50],
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: Colors.gray[100],
+  },
+  benefitIcon: {
+    fontSize: 24,
+    marginBottom: 8,
+  },
+  benefitTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: Colors.text,
+    marginBottom: 8,
+  },
+  benefitDescription: {
+    fontSize: 14,
+    color: Colors.gray[600],
+    lineHeight: 20,
+  },
+  authoritySection: {
+    backgroundColor: 'rgba(79, 70, 229, 0.05)',
+    borderRadius: 16,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(79, 70, 229, 0.1)',
+  },
+  authorityTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: Colors.primary,
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+  authorityStats: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  statItem: {
+    alignItems: 'center',
+  },
+  statNumber: {
+    fontSize: 24,
+    fontWeight: '900',
+    color: Colors.primary,
+    marginBottom: 4,
+  },
+  statLabel: {
+    fontSize: 12,
+    color: Colors.gray[600],
+    textAlign: 'center',
+    fontWeight: '600',
+  },
   ctaSection: {
     borderRadius: 24,
     padding: 6,
@@ -702,5 +810,47 @@ const styles = StyleSheet.create({
     color: Colors.white,
     fontSize: 16,
     fontWeight: '700',
+  },
+  supportDetailsSection: {
+    backgroundColor: 'rgba(34, 197, 94, 0.05)',
+    borderRadius: 16,
+    padding: 20,
+    marginTop: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(34, 197, 94, 0.1)',
+  },
+  supportDetailsTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#059669',
+    textAlign: 'center',
+    marginBottom: 12,
+  },
+  supportDetailsDescription: {
+    fontSize: 14,
+    color: Colors.gray[600],
+    textAlign: 'center',
+    marginBottom: 16,
+    lineHeight: 20,
+  },
+  supportDetailsList: {
+    gap: 12,
+  },
+  supportDetailsItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  supportDetailsIcon: {
+    fontSize: 16,
+    marginRight: 12,
+    width: 24,
+    textAlign: 'center',
+  },
+  supportDetailsText: {
+    fontSize: 14,
+    color: Colors.text,
+    fontWeight: '600',
+    flex: 1,
   },
 });

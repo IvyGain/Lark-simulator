@@ -33,9 +33,9 @@ export function ResultsSummary({
 
   return (
     <View style={styles.container}>
-      {/* Single Row Layout - 年間削減コスト2/4、ROI 1/4、投資回収期間1/4 */}
-      <View style={styles.singleRowLayout}>
-        {/* 年間削減コスト - 2/4 width */}
+      {/* Two Row Layout - 年間削減コスト上段、ROI・投資回収期間下段 */}
+      <View style={styles.twoRowLayout}>
+        {/* 年間削減コスト - 上段全幅 */}
         <View style={styles.mainMetricCard}>
           <LinearGradient
             colors={[Colors.success, '#2E8B57']}
@@ -50,28 +50,31 @@ export function ResultsSummary({
           </LinearGradient>
         </View>
 
-        {/* ROI - 1/4 width */}
-        <View style={styles.secondaryMetricCard}>
-          <LinearGradient
-            colors={[Colors.primary + '15', Colors.primary + '25']}
-            style={styles.secondaryMetricGradient}
-          >
-            <Text style={styles.secondaryMetricIcon}>📈</Text>
-            <Text style={styles.secondaryMetricLabel}>ROI</Text>
-            <Text style={styles.secondaryMetricValue}>{metrics.roi.toFixed(1)}%</Text>
-          </LinearGradient>
-        </View>
+        {/* 下段 - ROIと投資回収期間 */}
+        <View style={styles.bottomRowLayout}>
+          {/* ROI - 1/2 width */}
+          <View style={styles.secondaryMetricCard}>
+            <LinearGradient
+              colors={[Colors.primary + '15', Colors.primary + '25']}
+              style={styles.secondaryMetricGradient}
+            >
+              <Text style={styles.secondaryMetricIcon}>📈</Text>
+              <Text style={styles.secondaryMetricLabel}>ROI</Text>
+              <Text style={styles.secondaryMetricValue}>{metrics.roi.toFixed(1)}%</Text>
+            </LinearGradient>
+          </View>
 
-        {/* 投資回収期間 - 1/4 width */}
-        <View style={styles.secondaryMetricCard}>
-          <LinearGradient
-            colors={[Colors.warning + '15', Colors.warning + '25']}
-            style={styles.secondaryMetricGradient}
-          >
-            <Text style={styles.secondaryMetricIcon}>⏱️</Text>
-            <Text style={styles.secondaryMetricLabel}>投資回収期間</Text>
-            <Text style={styles.secondaryMetricValue}>{metrics.paybackPeriod.toFixed(1)}ヶ月</Text>
-          </LinearGradient>
+          {/* 投資回収期間 - 1/2 width */}
+          <View style={styles.secondaryMetricCard}>
+            <LinearGradient
+              colors={[Colors.warning + '15', Colors.warning + '25']}
+              style={styles.secondaryMetricGradient}
+            >
+              <Text style={styles.secondaryMetricIcon}>⏱️</Text>
+              <Text style={styles.secondaryMetricLabel}>投資回収期間</Text>
+              <Text style={styles.secondaryMetricValue}>{metrics.paybackPeriod.toFixed(1)}ヶ月</Text>
+            </LinearGradient>
+          </View>
         </View>
       </View>
 
@@ -107,8 +110,16 @@ const styles = StyleSheet.create({
     gap: spacing.md,
     alignItems: 'stretch',
   },
+  twoRowLayout: {
+    marginBottom: spacing.xl * 1.5,
+    gap: spacing.md,
+  },
+  bottomRowLayout: {
+    flexDirection: 'row',
+    gap: spacing.md,
+    alignItems: 'stretch',
+  },
   mainMetricCard: {
-    flex: 2, // 2/4 of the width
     borderRadius: 18,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 8 },
@@ -117,6 +128,7 @@ const styles = StyleSheet.create({
     elevation: 12,
     borderWidth: 2,
     borderColor: 'rgba(255, 255, 255, 0.3)',
+    marginBottom: spacing.md,
   },
   mainMetricGradient: {
     borderRadius: 18,

@@ -1,6 +1,7 @@
 export const Colors = {
   primary: "#00A3A1", // Teal color similar to Lark's brand
   secondary: "#6C63FF", // Purple accent
+  accent: "#FF6B6B", // Add accent color for gradients
   background: "#FFFFFF",
   card: "#F8F9FA",
   text: "#333333",

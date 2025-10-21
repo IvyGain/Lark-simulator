@@ -50,6 +50,35 @@ export function LarkInfoSection() {
         ))}
       </View>
 
+      {/* Support Details Section */}
+      <View style={styles.supportSection}>
+        <Text style={styles.supportTitle}>導入支援の詳細内容</Text>
+        <Text style={styles.supportDescription}>
+          Larkの最大効率を発揮するためのノウハウを活かした無料相談構築設計をご支援します。
+        </Text>
+        <View style={styles.supportList}>
+          <View style={styles.supportItem}>
+            <Text style={styles.supportIcon}>🏗️</Text>
+            <Text style={styles.supportText}>業務基盤システム構築代行</Text>
+          </View>
+          <View style={styles.supportItem}>
+            <Text style={styles.supportIcon}>📊</Text>
+            <Text style={styles.supportText}>データ移行・初期設定の代行</Text>
+          </View>
+          <View style={styles.supportItem}>
+            <Text style={styles.supportIcon}>🎓</Text>
+            <Text style={styles.supportText}>社員向けオンボーディング研修・運用サポート</Text>
+          </View>
+          <View style={styles.supportItem}>
+            <Text style={styles.supportIcon}>🛡️</Text>
+            <Text style={styles.supportText}>導入後3ヶ月間の無料サポート</Text>
+          </View>
+          <View style={styles.supportItem}>
+            <Text style={styles.supportIcon}>⚙️</Text>
+            <Text style={styles.supportText}>カスタマイズ・運用最適化支援</Text>
+          </View>
+        </View>
+      </View>
 
     </View>
   );
@@ -127,5 +156,47 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.text,
     lineHeight: 18,
+  },
+  supportSection: {
+    backgroundColor: 'rgba(34, 197, 94, 0.05)',
+    borderRadius: 12,
+    padding: spacing.lg,
+    marginTop: spacing.lg,
+    borderWidth: 1,
+    borderColor: 'rgba(34, 197, 94, 0.1)',
+  },
+  supportTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#059669',
+    marginBottom: spacing.md,
+    textAlign: 'center',
+  },
+  supportDescription: {
+    fontSize: 14,
+    color: Colors.text,
+    textAlign: 'center',
+    marginBottom: spacing.lg,
+    lineHeight: 20,
+  },
+  supportList: {
+    gap: spacing.md,
+  },
+  supportItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: spacing.sm,
+  },
+  supportIcon: {
+    fontSize: 16,
+    marginRight: spacing.md,
+    width: 24,
+    textAlign: 'center',
+  },
+  supportText: {
+    fontSize: 14,
+    color: Colors.text,
+    fontWeight: '600',
+    flex: 1,
   },
 });
