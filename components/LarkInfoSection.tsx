@@ -54,7 +54,7 @@ export function LarkInfoSection() {
       <View style={styles.supportSection}>
         <Text style={styles.supportTitle}>導入支援の詳細内容</Text>
         <Text style={styles.supportDescription}>
-          Larkの最大効率を発揮するためのノウハウを活かした無料相談構築設計をご支援します。
+          Larkの最大効率を発揮するためのノウハウを活かした構築設計、開発をご支援します。
         </Text>
         <View style={styles.supportList}>
           <View style={styles.supportItem}>

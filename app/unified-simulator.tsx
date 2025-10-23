@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, ScrollView, SafeAreaView, Platform } from "react-native";
+import { StyleSheet, Text, View, ScrollView, SafeAreaView, Platform, Linking } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 import { tools, toolsByCategory, categoryTranslations } from "@/constants/tools";
@@ -181,6 +181,16 @@ export default function UnifiedSimulatorScreen() {
     }
   };
 
+  const handleContactSales = () => {
+    console.log('Contact Sales CTA pressed - Free Consultation')
+    Linking.openURL('https://ivygain-project.jp.larksuite.com/scheduler/1077edbc8cd5e47a')
+  };
+
+  const handleNewSimulation = () => {
+    console.log('New Simulation CTA pressed - Lark Free Install')
+    Linking.openURL('https://www.customercloud.co/lark-ivygain')
+  };
+
   // Removed summaryMetrics as we're using new components
 
   return (
@@ -254,6 +264,11 @@ export default function UnifiedSimulatorScreen() {
             />
 
             <LarkInfoSection />
+
+            <CallToActionSection 
+              onContactSales={handleContactSales}
+              onNewSimulation={handleNewSimulation}
+            />
           </>
         )}
         
