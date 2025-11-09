@@ -574,7 +574,7 @@ export function generateFormalProposal(
             • 単一ベンダー管理でシンプル化
           </td>
           <td style="text-align: center; font-weight: bold; color: #28a745;">
-            ${calculationResults.reductionPercentage}%<br>削減
+            ${calculationResults.reductionPercentage.toFixed(1)}%<br>削減
           </td>
         </tr>
         <tr>
@@ -896,20 +896,20 @@ export function generateFormalProposal(
       </tr>
       <tr>
         <td>データ移行・導入支援</td>
-        <td>¥0</td>
-        <td>¥0</td>
-        <td>キャンペーン適用により無償<br><small style="color: #666;">※詳細については備考欄に要問合せ</small></td>
+        <td>¥${(350000).toLocaleString()}</td>
+        <td>¥${(50000).toLocaleString()}</td>
+        <td>¥350,000〜¥2,500,000のレンジで内容により異なる</td>
       </tr>
       <tr>
         <td>教育・トレーニング</td>
-        <td>¥0</td>
-        <td>¥0</td>
-        <td>オンラインサポート含む</td>
+        <td>¥${(300000).toLocaleString()}</td>
+        <td>¥${(100000).toLocaleString()}</td>
+        <td>¥300,000〜（オンラインサポート含む）</td>
       </tr>
       <tr style="background: #f3e5f5;">
         <th>投資合計</th>
-        <th>¥${larkAnnualCost.toLocaleString()}</th>
-        <th>¥${larkAnnualCost.toLocaleString()}</th>
+        <th>¥${(larkAnnualCost + 350000 + 300000).toLocaleString()}</th>
+        <th>¥${(larkAnnualCost + 50000 + 100000).toLocaleString()}</th>
         <th>-</th>
       </tr>
     </table>
